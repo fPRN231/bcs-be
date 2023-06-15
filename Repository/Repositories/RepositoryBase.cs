@@ -12,10 +12,10 @@ namespace Persistence.Repositories;
 
 public class Repository<T> : IRepository<T> where T : class
 {
-    protected ApplicationContext _context;
+    protected BCSManagementContext _context;
     protected DbSet<T> dbSet;
     public Repository(
-        ApplicationContext context)
+        BCSManagementContext context)
     {
         _context = context;
         dbSet = context.Set<T>();

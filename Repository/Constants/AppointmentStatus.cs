@@ -1,4 +1,4 @@
-﻿namespace Repository.Models
+﻿namespace Persistence.Constants
 {
     public enum AppointmentStatus
     {
