@@ -47,6 +47,11 @@ public class BCSManagementContext : DbContext
             .WithMany()
             .HasForeignKey(a => a.UserId)
             .OnDelete(DeleteBehavior.ClientSetNull);
+        modelBuilder.Entity<Appointment>()
+            .HasOne(a => a.Prescription)
+            .WithMany()
+            .HasForeignKey(a => a.PrescriptionId)
+            .OnDelete(DeleteBehavior.Restrict);
 
     }
 }

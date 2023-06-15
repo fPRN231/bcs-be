@@ -224,8 +224,7 @@ namespace Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Appointments_PrescriptionId",
                 table: "Appointments",
-                column: "PrescriptionId",
-                unique: true);
+                column: "PrescriptionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Appointments_UserId",
@@ -278,7 +277,7 @@ namespace Persistence.Migrations
                 column: "PrescriptionId",
                 principalTable: "Prescriptions",
                 principalColumn: "PrescriptionId",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

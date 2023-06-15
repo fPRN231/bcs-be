@@ -15,6 +15,7 @@ namespace Repository.Models
         [Required]
         public string Time { get; set; }
         [Required]
+        [ForeignKey("Bird")]
         public string BirdId { get; set; }
         [Required]
         [ForeignKey("CustomerOrGuest")]
@@ -23,6 +24,7 @@ namespace Repository.Models
         [ForeignKey("User")]
         public string UserId { get; set; }
         [Required]
+        [ForeignKey("Prescription")]
         public string PrescriptionId { get; set; }
         public virtual AppointmentStatus? AppointmentStatus { get; set; }
         public virtual User CustomerOrGuest { get; set; }

@@ -12,7 +12,7 @@ using Repository.Context;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(BCSManagementContext))]
-    [Migration("20230615154201_Initial")]
+    [Migration("20230615154640_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -77,8 +77,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("CustomerOrGuestId");
 
-                    b.HasIndex("PrescriptionId")
-                        .IsUnique();
+                    b.HasIndex("PrescriptionId");
 
                     b.HasIndex("UserId");
 
@@ -302,9 +301,9 @@ namespace Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Repository.Models.Prescription", "Prescription")
-                        .WithOne()
-                        .HasForeignKey("Repository.Models.Appointment", "PrescriptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithMany()
+                        .HasForeignKey("PrescriptionId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Repository.Models.User", "User")
