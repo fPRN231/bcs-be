@@ -1,15 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Persistence.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Repository.Models
 {
-    public class Service
+    public partial class Service : BaseEntity
     {
         [Required]
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string ServiceId { get; set; }
-        [Required]
-        public String Description { get; set; }
+        public string Description { get; set; }
+
         [Required]
         public decimal BookingPrice { get; set; }
     }

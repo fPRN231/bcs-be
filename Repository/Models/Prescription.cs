@@ -1,16 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Persistence.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Repository.Models
 {
-    public class Prescription
+    public partial class Prescription : BaseEntity
     {
         [Required]
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string PrescriptionId { get; set; }
-
-        [Required]
-        [ForeignKey("Appointment")]
         public string AppointmentId { get; set; }
 
         [Required]

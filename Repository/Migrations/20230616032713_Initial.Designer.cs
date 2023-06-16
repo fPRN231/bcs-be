@@ -12,7 +12,7 @@ using Repository.Context;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(BCSManagementContext))]
-    [Migration("20230615154640_Initial")]
+    [Migration("20230616032713_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,7 +26,7 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Persistence.Models.MedicalHistory", b =>
                 {
-                    b.Property<string>("MedicalHistoryId")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
@@ -34,14 +34,20 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("DateCreated")
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("MedicalHistoryName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("MedicalHistoryId");
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("BirdId");
 
@@ -50,30 +56,45 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Repository.Models.Appointment", b =>
                 {
-                    b.Property<string>("AppointmentId")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("AppointmentStatus")
+                    b.Property<int>("AppointmentStatus")
                         .HasColumnType("int");
 
                     b.Property<string>("BirdId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("CustomerOrGuestId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("PrescriptionId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<TimeSpan>("Time")
+                        .HasColumnType("time");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("AppointmentId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CustomerOrGuestId");
 
@@ -86,15 +107,24 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Repository.Models.Bird", b =>
                 {
-                    b.Property<string>("BirdId")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("Gender")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -108,7 +138,7 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("BirdId");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
@@ -117,42 +147,75 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Repository.Models.DoctorInfo", b =>
                 {
-                    b.Property<string>("UserId")
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("YearsOfExperience")
                         .HasColumnType("int");
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("DoctorInfos");
                 });
 
             modelBuilder.Entity("Repository.Models.DoctorLogTime", b =>
                 {
-                    b.Property<string>("UserId")
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
-                    b.Property<string>("UserId1")
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<TimeSpan>("Time")
+                        .HasColumnType("time");
+
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("DoctorLogTimes");
                 });
 
             modelBuilder.Entity("Repository.Models.Feedback", b =>
                 {
-                    b.Property<string>("FeedbackId")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
@@ -160,14 +223,23 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("DoctorRating")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("FeedbackId");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
@@ -176,13 +248,19 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Repository.Models.Prescription", b =>
                 {
-                    b.Property<string>("PrescriptionId")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AppointmentId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Diagnose")
                         .IsRequired()
@@ -192,7 +270,10 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("PrescriptionId");
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("AppointmentId");
 
@@ -201,12 +282,21 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Repository.Models.Qualification", b =>
                 {
-                    b.Property<string>("QualificationId")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("DoctorInfoUserId")
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DoctorInfoId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -216,9 +306,9 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("QualificationId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("DoctorInfoUserId");
+                    b.HasIndex("DoctorInfoId");
 
                     b.HasIndex("UserId");
 
@@ -227,7 +317,7 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Repository.Models.Service", b =>
                 {
-                    b.Property<string>("ServiceId")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
@@ -237,11 +327,20 @@ namespace Persistence.Migrations
                     b.Property<decimal>("BookingPrice")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ServiceId");
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("AppointmentId");
 
@@ -250,7 +349,7 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Repository.Models.User", b =>
                 {
-                    b.Property<string>("UserId")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
@@ -258,9 +357,18 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -277,7 +385,7 @@ namespace Persistence.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
                 });
@@ -344,7 +452,7 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Repository.Models.User", "User")
                         .WithMany("DoctorLogTimes")
-                        .HasForeignKey("UserId1")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -377,7 +485,7 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Repository.Models.DoctorInfo", null)
                         .WithMany("Qualifications")
-                        .HasForeignKey("DoctorInfoUserId");
+                        .HasForeignKey("DoctorInfoId");
 
                     b.HasOne("Repository.Models.User", "User")
                         .WithMany()

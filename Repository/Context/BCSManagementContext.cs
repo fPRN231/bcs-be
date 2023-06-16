@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository.Models;
 
 namespace Repository.Context;
@@ -23,15 +25,27 @@ public class BCSManagementContext : DbContext
     public virtual DbSet<User> Users { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<DoctorLogTime>()
-            .Ignore(d => d.Date);
-        modelBuilder.Entity<DoctorLogTime>()
-            .Ignore(t => t.Time);
-        modelBuilder.Entity<Appointment>()
-            .Ignore(d => d.Date);
-        modelBuilder.Entity<Appointment>()
-            .Ignore(t => t.Time);
+        modelBuilder.Entity<DoctorLogTime>(builder =>
+        {
+            builder.Property(x => x.Date)
+                .HasConversion<DateOnlyConverter, DateOnlyComparer>();
+
+            builder.Property(x => x.Time)
+                .HasConversion<TimeOnlyConverter, TimeOnlyComparer>();
+        });
+        modelBuilder.Entity<Appointment>(builder =>
+        {
+            builder.Property(x => x.Date)
+                .HasConversion<DateOnlyConverter, DateOnlyComparer>();
+
+            builder.Property(x => x.Time)
+                .HasConversion<TimeOnlyConverter, TimeOnlyComparer>();
+        });
+
+        modelBuilder.Entity<Prescription>()
+            .HasOne(p => p.Appointment)
+            .WithMany()
+            .HasForeignKey(p => p.AppointmentId);
         modelBuilder.Entity<Appointment>()
             .HasOne(a => a.Prescription)
             .WithOne()
@@ -52,6 +66,41 @@ public class BCSManagementContext : DbContext
             .WithMany()
             .HasForeignKey(a => a.PrescriptionId)
             .OnDelete(DeleteBehavior.Restrict);
+        base.OnModelCreating(modelBuilder);
 
+    }
+    public class DateOnlyConverter : ValueConverter<DateOnly, DateTime>
+    {
+        public DateOnlyConverter() : base(
+                dateOnly => dateOnly.ToDateTime(TimeOnly.MinValue),
+                dateTime => DateOnly.FromDateTime(dateTime))
+        {
+        }
+    }
+
+    public class DateOnlyComparer : ValueComparer<DateOnly>
+    {
+        public DateOnlyComparer() : base(
+            (d1, d2) => d1.DayNumber == d2.DayNumber,
+            d => d.GetHashCode())
+        {
+        }
+    }
+    public class TimeOnlyConverter : ValueConverter<TimeOnly, TimeSpan>
+    {
+        public TimeOnlyConverter() : base(
+                timeOnly => timeOnly.ToTimeSpan(),
+                timeSpan => TimeOnly.FromTimeSpan(timeSpan))
+        {
+        }
+    }
+
+    public class TimeOnlyComparer : ValueComparer<TimeOnly>
+    {
+        public TimeOnlyComparer() : base(
+            (t1, t2) => t1.Ticks == t2.Ticks,
+            t => t.GetHashCode())
+        {
+        }
     }
 }

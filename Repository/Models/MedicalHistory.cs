@@ -9,18 +9,14 @@ using System.Threading.Tasks;
 
 namespace Persistence.Models
 {
-    public class MedicalHistory
+    public partial class MedicalHistory : BaseEntity
     {
         [Required]
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string MedicalHistoryId { get; set; }
-        [Required]
         public string MedicalHistoryName { get; set;}
+
         [Required]
-        public DateTime DateCreated { get; set; }
-        [Required]
-        [ForeignKey("Bird")]
         public string BirdId { get; set; }
+
         public virtual Bird Bird { get; set; }
     }
 }
