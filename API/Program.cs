@@ -5,11 +5,9 @@ using Repository.Context;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
-
 var services = builder.Services;
 
 // Add services to the container.
-builder.Services.AddDbContext<BCSManagementContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("BCSManagement")));
 
 services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

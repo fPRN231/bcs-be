@@ -5,10 +5,10 @@ namespace Repository.Models
 {
     public partial class DoctorLogTime : BaseEntity 
     {
-        [Required]
-        public string UserId { get; set; }
+        
+        public string DoctorId { get; set; }
 
-        public virtual User User { get; set; }
+        public virtual User Doctor { get; set; }
 
         public DateOnly Date { get; set; }
 

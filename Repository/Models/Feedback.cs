@@ -11,12 +11,11 @@ namespace Repository.Models
 {
     public partial class Feedback : BaseEntity
     {
-        [Required]
+        
         public int DoctorRating { get; set; }
 
         public string Comment { get; set; }
 
-        [Required]
         public string UserId { get; set; }
 
         public virtual User User { get; set; }

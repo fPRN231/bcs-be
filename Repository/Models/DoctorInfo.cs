@@ -7,14 +7,18 @@ namespace Repository.Models
 {
     public partial class DoctorInfo : BaseEntity
     {
-        [Required]
-        public string UserId { get; set; }
+        public DoctorInfo()
+        {
+            Qualifications = new HashSet<Qualification>();
+        }
+
+        public string DoctorId { get; set; }
 
         public int YearsOfExperience { get; set; }
 
         public int Rating { get; set; }
 
-        public virtual User User { get; set; }
+        public virtual User Doctor { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<Qualification> Qualifications { get; set; }
