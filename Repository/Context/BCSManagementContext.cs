@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Configuration;
+using Persistence.Context;
+using Persistence.Models;
 using Repository.Models;
 
 namespace Repository.Context;
@@ -60,6 +62,14 @@ public class BCSManagementContext : DbContext
         #endregion
 
         base.OnModelCreating(modelBuilder);
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            //other automated configurations left out
+            if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType))
+            {
+                entityType.AddSoftDeleteQueryFilter();
+            }
+        }
         modelBuilder.Entity<Appointment>()
             .HasOne(a => a.CustomerOrGuest)
             .WithMany(a => a.Appointments)
