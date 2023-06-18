@@ -10,7 +10,7 @@ namespace Persistence.Models
 {
     public abstract class BaseEntity
     {
-        [Required]
+        
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; init; }
 

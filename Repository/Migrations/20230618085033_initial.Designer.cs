@@ -12,8 +12,8 @@ using Repository.Context;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(BCSManagementContext))]
-    [Migration("20230616032713_Initial")]
-    partial class Initial
+    [Migration("20230618085033_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -80,27 +80,25 @@ namespace Persistence.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DoctorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PrescriptionId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<TimeSpan>("Time")
                         .HasColumnType("time");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerOrGuestId");
 
-                    b.HasIndex("PrescriptionId");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("DoctorId");
 
                     b.ToTable("Appointments");
                 });
@@ -157,22 +155,22 @@ namespace Persistence.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DoctorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("YearsOfExperience")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
+                    b.HasIndex("DoctorId")
                         .IsUnique();
 
                     b.ToTable("DoctorInfos");
@@ -193,6 +191,10 @@ namespace Persistence.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DoctorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
@@ -202,13 +204,9 @@ namespace Persistence.Migrations
                     b.Property<TimeSpan>("Time")
                         .HasColumnType("time");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("DoctorId");
 
                     b.ToTable("DoctorLogTimes");
                 });
@@ -393,7 +391,7 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Persistence.Models.MedicalHistory", b =>
                 {
                     b.HasOne("Repository.Models.Bird", "Bird")
-                        .WithMany("MedicalHistory")
+                        .WithMany("MedicalHistories")
                         .HasForeignKey("BirdId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -404,26 +402,20 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Repository.Models.Appointment", b =>
                 {
                     b.HasOne("Repository.Models.User", "CustomerOrGuest")
-                        .WithMany()
+                        .WithMany("Appointments")
                         .HasForeignKey("CustomerOrGuestId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Repository.Models.Prescription", "Prescription")
+                    b.HasOne("Repository.Models.User", "Doctor")
                         .WithMany()
-                        .HasForeignKey("PrescriptionId")
+                        .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Repository.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
                         .IsRequired();
 
                     b.Navigation("CustomerOrGuest");
 
-                    b.Navigation("Prescription");
-
-                    b.Navigation("User");
+                    b.Navigation("Doctor");
                 });
 
             modelBuilder.Entity("Repository.Models.Bird", b =>
@@ -439,24 +431,24 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Repository.Models.DoctorInfo", b =>
                 {
-                    b.HasOne("Repository.Models.User", "User")
+                    b.HasOne("Repository.Models.User", "Doctor")
                         .WithOne("DoctorInfo")
-                        .HasForeignKey("Repository.Models.DoctorInfo", "UserId")
+                        .HasForeignKey("Repository.Models.DoctorInfo", "DoctorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Doctor");
                 });
 
             modelBuilder.Entity("Repository.Models.DoctorLogTime", b =>
                 {
-                    b.HasOne("Repository.Models.User", "User")
+                    b.HasOne("Repository.Models.User", "Doctor")
                         .WithMany("DoctorLogTimes")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Doctor");
                 });
 
             modelBuilder.Entity("Repository.Models.Feedback", b =>
@@ -473,7 +465,7 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Repository.Models.Prescription", b =>
                 {
                     b.HasOne("Repository.Models.Appointment", "Appointment")
-                        .WithMany()
+                        .WithMany("Prescriptions")
                         .HasForeignKey("AppointmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -505,12 +497,14 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Repository.Models.Appointment", b =>
                 {
+                    b.Navigation("Prescriptions");
+
                     b.Navigation("Services");
                 });
 
             modelBuilder.Entity("Repository.Models.Bird", b =>
                 {
-                    b.Navigation("MedicalHistory");
+                    b.Navigation("MedicalHistories");
                 });
 
             modelBuilder.Entity("Repository.Models.DoctorInfo", b =>
@@ -520,6 +514,8 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Repository.Models.User", b =>
                 {
+                    b.Navigation("Appointments");
+
                     b.Navigation("BirdsOwned");
 
                     b.Navigation("DoctorInfo")

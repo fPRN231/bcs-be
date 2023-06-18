@@ -11,10 +11,9 @@ namespace Persistence.Models
 {
     public partial class MedicalHistory : BaseEntity
     {
-        [Required]
+        
         public string MedicalHistoryName { get; set;}
-
-        [Required]
+        
         public string BirdId { get; set; }
 
         public virtual Bird Bird { get; set; }

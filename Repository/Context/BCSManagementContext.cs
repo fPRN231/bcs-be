@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Configuration;
 using Repository.Models;
 
 namespace Repository.Context;
@@ -23,8 +24,22 @@ public class BCSManagementContext : DbContext
     public virtual DbSet<Prescription> Prescriptions { get; set; }
     public virtual DbSet<Service> Services { get; set; }
     public virtual DbSet<User> Users { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+            .AddJsonFile("appsettings.json")
+            .Build();
+            optionsBuilder.UseSqlServer(configuration.GetConnectionString("BCSManagementDB"));
+        }
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        #region Convert DateOnly & TimeOnly
         modelBuilder.Entity<DoctorLogTime>(builder =>
         {
             builder.Property(x => x.Date)
@@ -33,6 +48,7 @@ public class BCSManagementContext : DbContext
             builder.Property(x => x.Time)
                 .HasConversion<TimeOnlyConverter, TimeOnlyComparer>();
         });
+
         modelBuilder.Entity<Appointment>(builder =>
         {
             builder.Property(x => x.Date)
@@ -41,34 +57,24 @@ public class BCSManagementContext : DbContext
             builder.Property(x => x.Time)
                 .HasConversion<TimeOnlyConverter, TimeOnlyComparer>();
         });
+        #endregion
 
-        modelBuilder.Entity<Prescription>()
-            .HasOne(p => p.Appointment)
-            .WithMany()
-            .HasForeignKey(p => p.AppointmentId);
-        modelBuilder.Entity<Appointment>()
-            .HasOne(a => a.Prescription)
-            .WithOne()
-            .HasForeignKey<Appointment>(a => a.PrescriptionId);
+        base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Appointment>()
             .HasOne(a => a.CustomerOrGuest)
-            .WithMany()
-            .HasForeignKey(a => a.CustomerOrGuestId)
-            .OnDelete(DeleteBehavior.ClientSetNull);
+            .WithMany(a => a.Appointments)
+            .HasForeignKey(a => a.CustomerOrGuestId);
 
         modelBuilder.Entity<Appointment>()
-            .HasOne(a => a.User)
+            .HasOne(a => a.Doctor)
             .WithMany()
-            .HasForeignKey(a => a.UserId)
-            .OnDelete(DeleteBehavior.ClientSetNull);
-        modelBuilder.Entity<Appointment>()
-            .HasOne(a => a.Prescription)
-            .WithMany()
-            .HasForeignKey(a => a.PrescriptionId)
+            .HasForeignKey(a => a.DoctorId)
             .OnDelete(DeleteBehavior.Restrict);
-        base.OnModelCreating(modelBuilder);
+
 
     }
+
+    #region Classes For DateOnly & TimeOnly
     public class DateOnlyConverter : ValueConverter<DateOnly, DateTime>
     {
         public DateOnlyConverter() : base(
@@ -103,4 +109,5 @@ public class BCSManagementContext : DbContext
         {
         }
     }
+    #endregion
 }
