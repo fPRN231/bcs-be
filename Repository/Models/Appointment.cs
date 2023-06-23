@@ -20,9 +20,6 @@ namespace Repository.Models
 
         public string BirdId { get; set; }
 
-        public string CustomerOrGuestId { get; set; }
-        public virtual User CustomerOrGuest { get; set; }
-
         public string DoctorId { get; set; }
         public virtual User Doctor { get; set; }
 

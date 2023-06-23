@@ -65,14 +65,10 @@ namespace Persistence.Migrations
 
                     b.Property<string>("BirdId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("CustomerOrGuestId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -96,7 +92,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerOrGuestId");
+                    b.HasIndex("BirdId");
 
                     b.HasIndex("DeletedAt");
 
@@ -225,6 +221,10 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("AppointmentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Comment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -241,15 +241,11 @@ namespace Persistence.Migrations
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("DeletedAt");
+                    b.HasIndex("AppointmentId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("DeletedAt");
 
                     b.ToTable("Feedbacks");
                 });
@@ -301,6 +297,10 @@ namespace Persistence.Migrations
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("DoctorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DoctorInfoId")
                         .HasColumnType("nvarchar(450)");
@@ -419,9 +419,9 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Repository.Models.Appointment", b =>
                 {
-                    b.HasOne("Repository.Models.User", "CustomerOrGuest")
+                    b.HasOne("Repository.Models.Bird", null)
                         .WithMany("Appointments")
-                        .HasForeignKey("CustomerOrGuestId")
+                        .HasForeignKey("BirdId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -430,8 +430,6 @@ namespace Persistence.Migrations
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("CustomerOrGuest");
 
                     b.Navigation("Doctor");
                 });
@@ -471,13 +469,13 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Repository.Models.Feedback", b =>
                 {
-                    b.HasOne("Repository.Models.User", "User")
+                    b.HasOne("Repository.Models.Appointment", "Appointment")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("AppointmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Appointment");
                 });
 
             modelBuilder.Entity("Repository.Models.Prescription", b =>
@@ -522,6 +520,8 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Repository.Models.Bird", b =>
                 {
+                    b.Navigation("Appointments");
+
                     b.Navigation("MedicalHistories");
                 });
 
@@ -532,8 +532,6 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Repository.Models.User", b =>
                 {
-                    b.Navigation("Appointments");
-
                     b.Navigation("BirdsOwned");
 
                     b.Navigation("DoctorInfo")

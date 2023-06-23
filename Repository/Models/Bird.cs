@@ -10,6 +10,7 @@ namespace Repository.Models
         public Bird()
         {
             MedicalHistories = new HashSet<MedicalHistory>();
+            Appointments = new HashSet<Appointment>();
         }
 
         public string Name { get; set; }
@@ -26,5 +27,8 @@ namespace Repository.Models
 
         [JsonIgnore]
         public virtual ICollection<MedicalHistory> MedicalHistories { get; set; }
+
+        [JsonIgnore]
+        public virtual ICollection<Appointment> Appointments { get; set; }
     }
 }
