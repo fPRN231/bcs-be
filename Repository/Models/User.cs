@@ -12,7 +12,6 @@ namespace Repository.Models
         {
             BirdsOwned = new HashSet<Bird>();
             DoctorLogTimes = new HashSet<DoctorLogTime>();
-            Appointments = new HashSet<Appointment>();
         }
 
         public string Name { get; set; }
@@ -34,8 +33,5 @@ namespace Repository.Models
 
         [JsonIgnore]
         public virtual ICollection<DoctorLogTime> DoctorLogTimes { get; set; }
-
-        [JsonIgnore]
-        public virtual ICollection<Appointment> Appointments { get; set; }
     }
 }

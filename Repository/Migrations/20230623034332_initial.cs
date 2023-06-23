@@ -30,39 +30,6 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Appointments",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Time = table.Column<TimeSpan>(type: "time", nullable: false),
-                    BirdId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CustomerOrGuestId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    DoctorId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    AppointmentStatus = table.Column<int>(type: "int", nullable: false),
-                    PrescriptionId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Appointments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Appointments_Users_CustomerOrGuestId",
-                        column: x => x.CustomerOrGuestId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Appointments_Users_DoctorId",
-                        column: x => x.DoctorId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Birds",
                 columns: table => new
                 {
@@ -135,13 +102,96 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Appointments",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Time = table.Column<TimeSpan>(type: "time", nullable: false),
+                    BirdId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    DoctorId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AppointmentStatus = table.Column<int>(type: "int", nullable: false),
+                    PrescriptionId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Appointments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Appointments_Birds_BirdId",
+                        column: x => x.BirdId,
+                        principalTable: "Birds",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Appointments_Users_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MedicalHistory",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    MedicalHistoryName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BirdId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MedicalHistory", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MedicalHistory_Birds_BirdId",
+                        column: x => x.BirdId,
+                        principalTable: "Birds",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Qualification",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DoctorId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    DoctorInfoId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Qualification", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Qualification_DoctorInfos_DoctorInfoId",
+                        column: x => x.DoctorInfoId,
+                        principalTable: "DoctorInfos",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Qualification_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Feedbacks",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     DoctorRating = table.Column<int>(type: "int", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AppointmentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -150,9 +200,9 @@ namespace Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Feedbacks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Feedbacks_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
+                        name: "FK_Feedbacks_Appointments_AppointmentId",
+                        column: x => x.AppointmentId,
+                        principalTable: "Appointments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -202,60 +252,15 @@ namespace Persistence.Migrations
                         principalColumn: "Id");
                 });
 
-            migrationBuilder.CreateTable(
-                name: "MedicalHistory",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    MedicalHistoryName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BirdId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MedicalHistory", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_MedicalHistory_Birds_BirdId",
-                        column: x => x.BirdId,
-                        principalTable: "Birds",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Qualification",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    DoctorInfoId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Qualification", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Qualification_DoctorInfos_DoctorInfoId",
-                        column: x => x.DoctorInfoId,
-                        principalTable: "DoctorInfos",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Qualification_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_Appointments_BirdId",
+                table: "Appointments",
+                column: "BirdId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Appointments_CustomerOrGuestId",
+                name: "IX_Appointments_DeletedAt",
                 table: "Appointments",
-                column: "CustomerOrGuestId");
+                column: "DeletedAt");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Appointments_DoctorId",
@@ -263,9 +268,19 @@ namespace Persistence.Migrations
                 column: "DoctorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Birds_DeletedAt",
+                table: "Birds",
+                column: "DeletedAt");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Birds_UserId",
                 table: "Birds",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DoctorInfos_DeletedAt",
+                table: "DoctorInfos",
+                column: "DeletedAt");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DoctorInfos_DoctorId",
@@ -274,14 +289,24 @@ namespace Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_DoctorLogTimes_DeletedAt",
+                table: "DoctorLogTimes",
+                column: "DeletedAt");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DoctorLogTimes_DoctorId",
                 table: "DoctorLogTimes",
                 column: "DoctorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Feedbacks_UserId",
+                name: "IX_Feedbacks_AppointmentId",
                 table: "Feedbacks",
-                column: "UserId");
+                column: "AppointmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Feedbacks_DeletedAt",
+                table: "Feedbacks",
+                column: "DeletedAt");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MedicalHistory_BirdId",
@@ -289,9 +314,24 @@ namespace Persistence.Migrations
                 column: "BirdId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MedicalHistory_DeletedAt",
+                table: "MedicalHistory",
+                column: "DeletedAt");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Prescriptions_AppointmentId",
                 table: "Prescriptions",
                 column: "AppointmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Prescriptions_DeletedAt",
+                table: "Prescriptions",
+                column: "DeletedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Qualification_DeletedAt",
+                table: "Qualification",
+                column: "DeletedAt");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Qualification_DoctorInfoId",
@@ -307,6 +347,16 @@ namespace Persistence.Migrations
                 name: "IX_Services_AppointmentId",
                 table: "Services",
                 column: "AppointmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Services_DeletedAt",
+                table: "Services",
+                column: "DeletedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_DeletedAt",
+                table: "Users",
+                column: "DeletedAt");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -330,13 +380,13 @@ namespace Persistence.Migrations
                 name: "Services");
 
             migrationBuilder.DropTable(
-                name: "Birds");
-
-            migrationBuilder.DropTable(
                 name: "DoctorInfos");
 
             migrationBuilder.DropTable(
                 name: "Appointments");
+
+            migrationBuilder.DropTable(
+                name: "Birds");
 
             migrationBuilder.DropTable(
                 name: "Users");

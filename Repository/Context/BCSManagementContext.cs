@@ -70,10 +70,6 @@ public class BCSManagementContext : DbContext
                 entityType.AddSoftDeleteQueryFilter();
             }
         }
-        modelBuilder.Entity<Appointment>()
-            .HasOne(a => a.CustomerOrGuest)
-            .WithMany(a => a.Appointments)
-            .HasForeignKey(a => a.CustomerOrGuestId);
 
         modelBuilder.Entity<Appointment>()
             .HasOne(a => a.Doctor)
