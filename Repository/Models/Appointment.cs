@@ -10,25 +10,21 @@ namespace Repository.Models
     {
         public Appointment()
         {
-            Prescriptions = new HashSet<Prescription>();
             Services = new HashSet<Service>();
         }
 
         public DateOnly Date { get; set; }
 
         public TimeOnly Time { get; set; }
+        public string Prescription { get; set; }
 
         public string BirdId { get; set; }
 
         public string DoctorId { get; set; }
+
         public virtual User Doctor { get; set; }
 
         public virtual AppointmentStatus AppointmentStatus { get; set; }
-
-        public string PrescriptionId { get; set; }
-
-        [JsonIgnore]
-        public virtual ICollection<Prescription> Prescriptions { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<Service> Services { get; set; }
