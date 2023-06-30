@@ -23,7 +23,7 @@ public class BCSManagementContext : DbContext
     public virtual DbSet<DoctorInfo> DoctorInfos { get; set; }
     public virtual DbSet<DoctorLogTime> DoctorLogTimes { get; set; }
     public virtual DbSet<Feedback> Feedbacks { get; set; }
-    public virtual DbSet<Prescription> Prescriptions { get; set; }
+    //public virtual DbSet<Prescription> Prescriptions { get; set; }
     public virtual DbSet<Service> Services { get; set; }
     public virtual DbSet<User> Users { get; set; }
 
@@ -77,6 +77,11 @@ public class BCSManagementContext : DbContext
             .HasForeignKey(a => a.DoctorId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        modelBuilder.Entity<Feedback>()
+            .HasOne(a => a.User)
+            .WithOne()
+            .HasForeignKey<Feedback>(a => a.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
 
     }
 

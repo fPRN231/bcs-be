@@ -108,10 +108,10 @@ namespace Persistence.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Time = table.Column<TimeSpan>(type: "time", nullable: false),
+                    Prescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BirdId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     DoctorId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AppointmentStatus = table.Column<int>(type: "int", nullable: false),
-                    PrescriptionId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -191,6 +191,7 @@ namespace Persistence.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     DoctorRating = table.Column<int>(type: "int", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AppointmentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -205,29 +206,12 @@ namespace Persistence.Migrations
                         principalTable: "Appointments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Prescriptions",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    AppointmentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Diagnose = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Medication = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Prescriptions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Prescriptions_Appointments_AppointmentId",
-                        column: x => x.AppointmentId,
-                        principalTable: "Appointments",
+                        name: "FK_Feedbacks_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -309,6 +293,12 @@ namespace Persistence.Migrations
                 column: "DeletedAt");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Feedbacks_UserId",
+                table: "Feedbacks",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MedicalHistory_BirdId",
                 table: "MedicalHistory",
                 column: "BirdId");
@@ -316,16 +306,6 @@ namespace Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_MedicalHistory_DeletedAt",
                 table: "MedicalHistory",
-                column: "DeletedAt");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Prescriptions_AppointmentId",
-                table: "Prescriptions",
-                column: "AppointmentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Prescriptions_DeletedAt",
-                table: "Prescriptions",
                 column: "DeletedAt");
 
             migrationBuilder.CreateIndex(
@@ -369,9 +349,6 @@ namespace Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "MedicalHistory");
-
-            migrationBuilder.DropTable(
-                name: "Prescriptions");
 
             migrationBuilder.DropTable(
                 name: "Qualification");

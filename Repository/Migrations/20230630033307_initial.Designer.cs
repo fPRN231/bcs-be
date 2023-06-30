@@ -12,7 +12,7 @@ using Repository.Context;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(BCSManagementContext))]
-    [Migration("20230623034332_initial")]
+    [Migration("20230630033307_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -85,7 +85,7 @@ namespace Persistence.Migrations
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("PrescriptionId")
+                    b.Property<string>("Prescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -243,49 +243,20 @@ namespace Persistence.Migrations
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AppointmentId");
 
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Feedbacks");
-                });
-
-            modelBuilder.Entity("Repository.Models.Prescription", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("AppointmentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Diagnose")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Medication")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppointmentId");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.ToTable("Prescriptions");
                 });
 
             modelBuilder.Entity("Repository.Models.Qualification", b =>
@@ -477,18 +448,15 @@ namespace Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Appointment");
-                });
-
-            modelBuilder.Entity("Repository.Models.Prescription", b =>
-                {
-                    b.HasOne("Repository.Models.Appointment", "Appointment")
-                        .WithMany("Prescriptions")
-                        .HasForeignKey("AppointmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("Repository.Models.User", "User")
+                        .WithOne()
+                        .HasForeignKey("Repository.Models.Feedback", "UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Appointment");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Repository.Models.Qualification", b =>
@@ -515,8 +483,6 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Repository.Models.Appointment", b =>
                 {
-                    b.Navigation("Prescriptions");
-
                     b.Navigation("Services");
                 });
 
