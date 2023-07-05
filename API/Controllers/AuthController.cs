@@ -105,7 +105,6 @@ public class AuthController : BaseController
     {
         CookieOptions cookieOptions = new();
         cookieOptions.HttpOnly = true;
-        cookieOptions.SameSite = SameSiteMode.None;
         cookieOptions.Expires = DateTime.Now.AddDays(2);
         HttpContext.Response.Cookies.Append(key, value, cookieOptions);
     }
