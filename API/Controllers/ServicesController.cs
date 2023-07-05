@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 
 [Route("/v1/bcs/services")]
-public class ServicesController : Controller
+public class ServicesController : BaseController
 {
     private readonly IRepositoryBase<Service> _serviceRepostory;
 

@@ -1,12 +1,9 @@
 ﻿using API.Auth;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Repository;
-using System.Linq.Expressions;
 
 namespace API.Controllers;
 
-[Route("[controller]")]
 [ApiController]
 public class BaseController : ControllerBase
 {
@@ -14,16 +11,16 @@ public class BaseController : ControllerBase
 
     protected IMapper Mapper => _mapper ??= HttpContext.RequestServices.GetService<IMapper>();
 
-    protected string CurrentUserID => GetUserID();
+    protected Guid CurrentUserID => GetUserID();
 
-    protected string GetUserID()
+    protected Guid GetUserID()
     {
         var userID = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "id");
         if (userID is null)
         {
-            return "";
+            return Guid.Empty;
         }
-        return userID.Value;
+        return new Guid(userID.Value);
     }
 
     public bool IsAdmin => IsCurrentUserAdmin();

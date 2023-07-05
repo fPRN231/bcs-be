@@ -54,4 +54,12 @@ public static class ServicesConfig
         });
         return services;
     }
+
+    public static async Task ApplyMigrations(this IServiceProvider serviceProvider)
+    {
+        using var scope = serviceProvider.CreateScope();
+        await using BCSManagementContext dbContext =
+            scope.ServiceProvider.GetRequiredService<BCSManagementContext>();
+        await dbContext.Database.MigrateAsync();
+    }
 }

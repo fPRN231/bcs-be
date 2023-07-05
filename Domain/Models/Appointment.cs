@@ -15,9 +15,9 @@ public partial class Appointment : BaseEntity
     public TimeOnly Time { get; set; }
     public string Prescription { get; set; }
 
-    public string BirdId { get; set; }
+    public Guid BirdId { get; set; }
 
-    public string DoctorId { get; set; }
+    public Guid DoctorId { get; set; }
 
     public virtual User Doctor { get; set; }
 

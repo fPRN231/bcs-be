@@ -3,7 +3,7 @@
 public partial class DoctorLogTime : BaseEntity 
 {
     
-    public string DoctorId { get; set; }
+    public Guid DoctorId { get; set; }
 
     public virtual User Doctor { get; set; }
 

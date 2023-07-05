@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 
 [Route("/v1/bcs/appointments")]
-public class AppointmentsController : Controller
+public class AppointmentsController : BaseController
 {
     private readonly IRepositoryBase<Appointment> _appointmentRepostory;
 

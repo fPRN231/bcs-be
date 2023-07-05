@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 
 [Route("/v1/bcs/doctorLogTimes")]
-public class DoctorLogTimesController : Controller
+public class DoctorLogTimesController : BaseController
 {
     private readonly IRepositoryBase<DoctorLogTime> _doctorLogTimeController;
 

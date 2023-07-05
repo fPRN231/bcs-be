@@ -12,8 +12,8 @@ using Repository.Context;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(BCSManagementContext))]
-    [Migration("20230630033307_initial")]
-    partial class initial
+    [Migration("20230705062946_ReconfigIdType")]
+    partial class ReconfigIdType
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,50 +24,17 @@ namespace Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Persistence.Models.MedicalHistory", b =>
+            modelBuilder.Entity("Domain.Models.Appointment", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("BirdId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("MedicalHistoryName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BirdId");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.ToTable("MedicalHistory");
-                });
-
-            modelBuilder.Entity("Repository.Models.Appointment", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("AppointmentStatus")
                         .HasColumnType("int");
 
-                    b.Property<string>("BirdId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("BirdId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -78,9 +45,8 @@ namespace Persistence.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DoctorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
@@ -103,11 +69,11 @@ namespace Persistence.Migrations
                     b.ToTable("Appointments");
                 });
 
-            modelBuilder.Entity("Repository.Models.Bird", b =>
+            modelBuilder.Entity("Domain.Models.Bird", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
@@ -134,22 +100,25 @@ namespace Persistence.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId1")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DeletedAt");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Birds");
                 });
 
-            modelBuilder.Entity("Repository.Models.DoctorInfo", b =>
+            modelBuilder.Entity("Domain.Models.DoctorInfo", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -157,9 +126,8 @@ namespace Persistence.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DoctorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
@@ -180,11 +148,11 @@ namespace Persistence.Migrations
                     b.ToTable("DoctorInfos");
                 });
 
-            modelBuilder.Entity("Repository.Models.DoctorLogTime", b =>
+            modelBuilder.Entity("Domain.Models.DoctorLogTime", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -195,9 +163,8 @@ namespace Persistence.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DoctorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
@@ -217,15 +184,18 @@ namespace Persistence.Migrations
                     b.ToTable("DoctorLogTimes");
                 });
 
-            modelBuilder.Entity("Repository.Models.Feedback", b =>
+            modelBuilder.Entity("Domain.Models.Feedback", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AppointmentId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("AppointmentId1")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Comment")
                         .IsRequired()
@@ -243,13 +213,12 @@ namespace Persistence.Migrations
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppointmentId");
+                    b.HasIndex("AppointmentId1");
 
                     b.HasIndex("DeletedAt");
 
@@ -259,11 +228,14 @@ namespace Persistence.Migrations
                     b.ToTable("Feedbacks");
                 });
 
-            modelBuilder.Entity("Repository.Models.Qualification", b =>
+            modelBuilder.Entity("Domain.Models.MedicalHistory", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BirdId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -271,12 +243,39 @@ namespace Persistence.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DoctorId")
+                    b.Property<string>("MedicalHistoryName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DoctorInfoId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BirdId");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.ToTable("MedicalHistory");
+                });
+
+            modelBuilder.Entity("Domain.Models.Qualification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("DoctorInfoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
@@ -285,9 +284,8 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -300,14 +298,14 @@ namespace Persistence.Migrations
                     b.ToTable("Qualification");
                 });
 
-            modelBuilder.Entity("Repository.Models.Service", b =>
+            modelBuilder.Entity("Domain.Models.Service", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AppointmentId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid?>("AppointmentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("BookingPrice")
                         .HasColumnType("decimal(18,2)");
@@ -334,11 +332,11 @@ namespace Persistence.Migrations
                     b.ToTable("Services");
                 });
 
-            modelBuilder.Entity("Repository.Models.User", b =>
+            modelBuilder.Entity("Domain.Models.User", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -379,26 +377,15 @@ namespace Persistence.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Persistence.Models.MedicalHistory", b =>
+            modelBuilder.Entity("Domain.Models.Appointment", b =>
                 {
-                    b.HasOne("Repository.Models.Bird", "Bird")
-                        .WithMany("MedicalHistories")
-                        .HasForeignKey("BirdId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Bird");
-                });
-
-            modelBuilder.Entity("Repository.Models.Appointment", b =>
-                {
-                    b.HasOne("Repository.Models.Bird", null)
+                    b.HasOne("Domain.Models.Bird", null)
                         .WithMany("Appointments")
                         .HasForeignKey("BirdId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Repository.Models.User", "Doctor")
+                    b.HasOne("Domain.Models.User", "Doctor")
                         .WithMany()
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -407,31 +394,31 @@ namespace Persistence.Migrations
                     b.Navigation("Doctor");
                 });
 
-            modelBuilder.Entity("Repository.Models.Bird", b =>
+            modelBuilder.Entity("Domain.Models.Bird", b =>
                 {
-                    b.HasOne("Repository.Models.User", "User")
+                    b.HasOne("Domain.Models.User", "User")
                         .WithMany("BirdsOwned")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UserId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Repository.Models.DoctorInfo", b =>
+            modelBuilder.Entity("Domain.Models.DoctorInfo", b =>
                 {
-                    b.HasOne("Repository.Models.User", "Doctor")
+                    b.HasOne("Domain.Models.User", "Doctor")
                         .WithOne("DoctorInfo")
-                        .HasForeignKey("Repository.Models.DoctorInfo", "DoctorId")
+                        .HasForeignKey("Domain.Models.DoctorInfo", "DoctorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Doctor");
                 });
 
-            modelBuilder.Entity("Repository.Models.DoctorLogTime", b =>
+            modelBuilder.Entity("Domain.Models.DoctorLogTime", b =>
                 {
-                    b.HasOne("Repository.Models.User", "Doctor")
+                    b.HasOne("Domain.Models.User", "Doctor")
                         .WithMany("DoctorLogTimes")
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -440,17 +427,17 @@ namespace Persistence.Migrations
                     b.Navigation("Doctor");
                 });
 
-            modelBuilder.Entity("Repository.Models.Feedback", b =>
+            modelBuilder.Entity("Domain.Models.Feedback", b =>
                 {
-                    b.HasOne("Repository.Models.Appointment", "Appointment")
+                    b.HasOne("Domain.Models.Appointment", "Appointment")
                         .WithMany()
-                        .HasForeignKey("AppointmentId")
+                        .HasForeignKey("AppointmentId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Repository.Models.User", "User")
+                    b.HasOne("Domain.Models.User", "User")
                         .WithOne()
-                        .HasForeignKey("Repository.Models.Feedback", "UserId")
+                        .HasForeignKey("Domain.Models.Feedback", "UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -459,13 +446,24 @@ namespace Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Repository.Models.Qualification", b =>
+            modelBuilder.Entity("Domain.Models.MedicalHistory", b =>
                 {
-                    b.HasOne("Repository.Models.DoctorInfo", null)
+                    b.HasOne("Domain.Models.Bird", "Bird")
+                        .WithMany("MedicalHistories")
+                        .HasForeignKey("BirdId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bird");
+                });
+
+            modelBuilder.Entity("Domain.Models.Qualification", b =>
+                {
+                    b.HasOne("Domain.Models.DoctorInfo", null)
                         .WithMany("Qualifications")
                         .HasForeignKey("DoctorInfoId");
 
-                    b.HasOne("Repository.Models.User", "User")
+                    b.HasOne("Domain.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -474,31 +472,31 @@ namespace Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Repository.Models.Service", b =>
+            modelBuilder.Entity("Domain.Models.Service", b =>
                 {
-                    b.HasOne("Repository.Models.Appointment", null)
+                    b.HasOne("Domain.Models.Appointment", null)
                         .WithMany("Services")
                         .HasForeignKey("AppointmentId");
                 });
 
-            modelBuilder.Entity("Repository.Models.Appointment", b =>
+            modelBuilder.Entity("Domain.Models.Appointment", b =>
                 {
                     b.Navigation("Services");
                 });
 
-            modelBuilder.Entity("Repository.Models.Bird", b =>
+            modelBuilder.Entity("Domain.Models.Bird", b =>
                 {
                     b.Navigation("Appointments");
 
                     b.Navigation("MedicalHistories");
                 });
 
-            modelBuilder.Entity("Repository.Models.DoctorInfo", b =>
+            modelBuilder.Entity("Domain.Models.DoctorInfo", b =>
                 {
                     b.Navigation("Qualifications");
                 });
 
-            modelBuilder.Entity("Repository.Models.User", b =>
+            modelBuilder.Entity("Domain.Models.User", b =>
                 {
                     b.Navigation("BirdsOwned");
 

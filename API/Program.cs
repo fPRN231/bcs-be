@@ -23,8 +23,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    await app.Services.ApplyMigrations();
 }
-
 app.UseAutoWrapper();
 app.UseAuthentication();
 app.UseAuthorization();

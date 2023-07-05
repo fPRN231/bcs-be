@@ -9,7 +9,7 @@ public partial class DoctorInfo : BaseEntity
         Qualifications = new HashSet<Qualification>();
     }
 
-    public string DoctorId { get; set; }
+    public Guid DoctorId { get; set; }
 
     public int YearsOfExperience { get; set; }
 
