@@ -15,8 +15,19 @@ public class FeedbacksController : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetServices()
+    public async Task<IActionResult> GetFeedbackOfAppointment(Guid appointmentId)
     {
-        return Ok(await _feedbackRepository.ToListAsync());
+        return Ok(await _feedbackRepository.WhereAsync(x => x.AppointmentId.Equals(appointmentId)));
     }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetFeedback(Guid id)
+    {
+        var target = await _feedbackRepository.FirstOrDefaultAsync(x => x.Id.Equals(id));
+        return Ok(target);
+    }
+
+
+
+
 }
