@@ -16,7 +16,7 @@ var services = builder.Services;
     services.Configure<AppSettings>(configuration.GetSection(nameof(AppSettings)));
     services.AddBcsDbContext();
     services.AddJwtService();
-    services.AddSwaggerGen();
+    services.AddSwagger();
 }
 
 var app = builder.Build();

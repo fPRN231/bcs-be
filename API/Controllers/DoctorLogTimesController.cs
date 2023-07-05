@@ -1,4 +1,4 @@
-﻿using API.Models;
+﻿using API.Models.Request;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;

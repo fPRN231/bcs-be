@@ -2,12 +2,10 @@
 using Domain.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace API.Models
+namespace API.Models.Request
 {
-    public class CreateDoctorInfoRequest : IMapTo<DoctorInfo>
+    public class UpdateDoctorInfoRequest : IMapTo<DoctorInfo>
     {
-        [Required]
         public int YearsOfExperience { get; set; }
-
     }
 }

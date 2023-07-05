@@ -2,9 +2,9 @@
 using Domain.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace API.Models
+namespace API.Models.Request
 {
-    public class UpdateDoctorLogTime : IMapTo<DoctorLogTime>
+    public class UpdateDoctorLogTimeRequest : IMapTo<DoctorLogTime>
     {
         public DateOnly Date { get; set; }
 
