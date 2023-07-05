@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Persistence.Repositories.Interfaces;
+﻿using Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Repository.Context;
 using System.Linq.Expressions;
 
