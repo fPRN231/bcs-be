@@ -1,11 +1,12 @@
 ﻿using Domain.Interfaces;
+using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Repository.Context;
 using System.Linq.Expressions;
 
 namespace Persistence.Repositories;
 
-public class RepositoryBase<T> : IRepositoryBase<T> where T : class
+public class RepositoryBase<T> : IRepositoryBase<T> where T : BaseEntity
 {
     protected BCSManagementContext _context;
     protected DbSet<T> dbSet;

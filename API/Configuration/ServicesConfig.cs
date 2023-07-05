@@ -1,7 +1,9 @@
 ﻿using Domain.Application.AppConfig;
+using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using Persistence.Repositories;
 using Repository.Context;
 
 namespace API.Configuration;
@@ -53,6 +55,7 @@ public static class ServicesConfig
             var appSettings = services.BuildServiceProvider().GetService<IOptions<AppSettings>>().Value;
             options.UseSqlServer(appSettings.ConnectionStrings.BCSManagementDB);
         });
+        services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
         return services;
     }
 
