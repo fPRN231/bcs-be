@@ -1,6 +1,6 @@
 ﻿using AutoWrapper;
 
-namespace API.Configuration;
+namespace API.Configurations;
 
 public static class ApplicationConfig
 {

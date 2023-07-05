@@ -103,9 +103,14 @@ public class AuthController : BaseController
 
     private void SetCookie(string key, string value)
     {
-        CookieOptions cookieOptions = new();
-        cookieOptions.HttpOnly = true;
-        cookieOptions.Expires = DateTime.Now.AddDays(2);
-        HttpContext.Response.Cookies.Append(key, value, cookieOptions);
+        CookieOptions cookieOptions = new CookieOptions
+        {
+            Expires = DateTime.Now.AddDays(2),
+            IsEssential = true,
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.None,
+        };
+        Response.Cookies.Append(key, value, cookieOptions);
     }
 }

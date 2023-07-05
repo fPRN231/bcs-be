@@ -1,4 +1,4 @@
-using API.Configuration;
+using API.Configurations;
 using API.Utils;
 using Domain.Application.AppConfig;
 using System.Reflection;
@@ -17,11 +17,21 @@ var services = builder.Services;
     services.AddBcsDbContext();
     services.AddJwtService();
     services.AddSwagger();
-    services.AddCors(options => {
-        options.AddPolicy("CorsPolicy", builder => {
-            builder.AllowAnyOrigin()
-                   .AllowAnyMethod()
-                   .AllowAnyHeader();
+    services.AddCors(options =>
+    {
+        options.AddPolicy("CorsPolicy", builder =>
+        {
+            builder.AllowAnyMethod()
+                   .AllowAnyHeader()
+                   .AllowCredentials()
+                   .SetIsOriginAllowed(origin =>
+                   {
+                       if (string.IsNullOrWhiteSpace(origin)) return false;
+                       if (origin.ToLower().StartsWith("http://localhost") ||
+                           origin.ToLower().Equals(configuration.Get<AppSettings>().SpaUrl))
+                           return true;
+                       return false;
+                   });
         });
     });
 }
