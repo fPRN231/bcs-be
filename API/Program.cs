@@ -17,6 +17,13 @@ var services = builder.Services;
     services.AddBcsDbContext();
     services.AddJwtService();
     services.AddSwagger();
+    services.AddCors(options => {
+        options.AddPolicy("CorsPolicy", builder => {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+    });
 }
 
 var app = builder.Build();
@@ -26,6 +33,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     await app.Services.ApplyMigrations();
 }
+app.UseCors("CorsPolicy");
 app.UseAutoWrapper();
 app.UseAuthentication();
 app.UseAuthorization();
