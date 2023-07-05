@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[Route("api/v1/services")]
+[Route("/v1/bcs/doctorLogTimes")]
 public class DoctorLogTimesController : Controller
 {
     private readonly IRepositoryBase<DoctorLogTime> _doctorLogTimeController;

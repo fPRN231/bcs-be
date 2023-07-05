@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[Route("api/v1/services")]
+[Route("/v1/bcs/qualifications")]
 public class QualificationsController : Controller
 {
     private readonly IRepositoryBase<Qualification> _qualificationController;

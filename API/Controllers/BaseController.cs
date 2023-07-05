@@ -14,16 +14,16 @@ public class BaseController : ControllerBase
 
     protected IMapper Mapper => _mapper ??= HttpContext.RequestServices.GetService<IMapper>();
 
-    protected int CurrentUserID => GetUserID();
+    protected string CurrentUserID => GetUserID();
 
-    protected int GetUserID()
+    protected string GetUserID()
     {
         var userID = HttpContext.User.Claims.FirstOrDefault(a => a.Type == "id");
         if (userID is null)
         {
-            return 0;
+            return "";
         }
-        return int.Parse(userID.Value);
+        return userID.Value;
     }
 
     public bool IsAdmin => IsCurrentUserAdmin();

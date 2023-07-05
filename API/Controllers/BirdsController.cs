@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[Route("api/v1/services")]
+[Route("/v1/bcs/birds")]
 public class BirdsController : Controller
 {
     private readonly IRepositoryBase<Bird> _birdRepostory;

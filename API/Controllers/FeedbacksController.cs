@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[Route("api/v1/services")]
+[Route("/v1/bcs/feedbacks")]
 public class FeedbacksController : Controller
 {
     private readonly IRepositoryBase<Feedback> _feedbackController;

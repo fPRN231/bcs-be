@@ -4,19 +4,24 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[Route("api/v1/services")]
-public class DoctorInfosController : Controller
+[Route("api/v1/doctorInfo")]
+public class DoctorInfosController : BaseController
 {
-    private readonly IRepositoryBase<Service> _doctorInfoRepository;
+    private readonly IRepositoryBase<DoctorInfo> _doctorInfoRepository;
 
-    public DoctorInfosController(IRepositoryBase<Service> doctorInfoRepository)
+    public DoctorInfosController(IRepositoryBase<DoctorInfo> doctorInfoRepository)
     {
         _doctorInfoRepository = doctorInfoRepository;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetDoctorInfos()
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetDoctorInfo(string id)
     {
-        return Ok(await _doctorInfoRepository.ToListAsync());
+        var target = await _doctorInfoRepository.FirstOrDefaultAsync(x => x.DoctorId.Equals(id));
+        return Ok(target);
     }
+
+
+
+
 }
