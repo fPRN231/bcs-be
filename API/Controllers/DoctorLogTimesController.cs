@@ -7,16 +7,16 @@ namespace API.Controllers;
 [Route("/v1/bcs/doctorLogTimes")]
 public class DoctorLogTimesController : Controller
 {
-    private readonly IRepositoryBase<DoctorLogTime> _doctorLogTimeController;
+    private readonly IRepositoryBase<DoctorLogTime> _doctorLogTimeRepository;
 
-    public DoctorLogTimesController(IRepositoryBase<DoctorLogTime> doctorLogTimeController)
+    public DoctorLogTimesController(IRepositoryBase<DoctorLogTime> doctorLogTimeRepository)
     {
-        _doctorLogTimeController = doctorLogTimeController;
+        _doctorLogTimeRepository = doctorLogTimeRepository;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetServices()
     {
-        return Ok(await _doctorLogTimeController.ToListAsync());
+        return Ok(await _doctorLogTimeRepository.ToListAsync());
     }
 }

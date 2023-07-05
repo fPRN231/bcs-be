@@ -7,16 +7,16 @@ namespace API.Controllers;
 [Route("/v1/bcs/feedbacks")]
 public class FeedbacksController : Controller
 {
-    private readonly IRepositoryBase<Feedback> _feedbackController;
+    private readonly IRepositoryBase<Feedback> _feedbackRepository;
 
-    public FeedbacksController(IRepositoryBase<Feedback> feedbackController)
+    public FeedbacksController(IRepositoryBase<Feedback> feedbackRepository)
     {
-        _feedbackController = feedbackController;
+        _feedbackRepository = feedbackRepository;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetServices()
     {
-        return Ok(await _feedbackController.ToListAsync());
+        return Ok(await _feedbackRepository.ToListAsync());
     }
 }
