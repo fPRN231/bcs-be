@@ -18,7 +18,7 @@ public partial class Bird : BaseEntity
 
     public bool Gender { get; set; }
 
-    public string UserId { get; set; }
+    public Guid UserId { get; set; }
 
     public virtual User User { get; set; }
 
