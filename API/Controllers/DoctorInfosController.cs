@@ -2,10 +2,12 @@
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
+[Authorize]
 [Route("/v1/bcs/doctorInfos")]
 public class DoctorInfosController : BaseController
 {

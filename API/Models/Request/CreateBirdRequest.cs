@@ -17,6 +17,5 @@ namespace API.Models.Request
 
         [Required]
         public bool Gender { get; set; }
-
     }
 }
