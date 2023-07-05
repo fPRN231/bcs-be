@@ -1,6 +1,7 @@
 using API.Configurations;
 using API.Utils;
 using Domain.Application.AppConfig;
+using Microsoft.Extensions.Options;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,17 +22,18 @@ var services = builder.Services;
     {
         options.AddPolicy("CorsPolicy", builder =>
         {
+            var appSettings = services.BuildServiceProvider().GetService<IOptions<AppSettings>>().Value;
             builder.AllowAnyMethod()
                    .AllowAnyHeader()
-                   .AllowCredentials()
                    .SetIsOriginAllowed(origin =>
                    {
                        if (string.IsNullOrWhiteSpace(origin)) return false;
                        if (origin.ToLower().StartsWith("http://localhost") ||
-                           origin.ToLower().Equals(configuration.Get<AppSettings>().SpaUrl))
+                           origin.ToLower().Equals(appSettings.SpaUrl))
                            return true;
                        return false;
-                   });
+                   })
+                   .AllowCredentials();
         });
     });
 }
