@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[Route("/v1/bcs/service")]
+[Route("/v1/bcs/services")]
 public class ServicesController : Controller
 {
     private readonly IRepositoryBase<Service> _serviceRepostory;

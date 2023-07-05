@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[Route("/v1/bcs/medicalhistory")]
+[Route("/v1/bcs/medicalhistories")]
 public class MedicalHistoriesController : Controller
 {
     private readonly IRepositoryBase<MedicalHistory> _medicalHistoryController;
