@@ -1,6 +1,4 @@
-﻿using Api.Configuration;
-
-namespace Api;
+﻿namespace API.Configuration;
 
 public class AppSettings
 {

@@ -1,4 +1,4 @@
-﻿namespace Api.Configuration;
+﻿namespace API.Configuration;
 
 public class DbConfig
 {

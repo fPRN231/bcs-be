@@ -1,8 +1,5 @@
-using Api;
+using API.Configuration;
 using API.Utils;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Repository.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -13,11 +10,7 @@ services.AddControllers(options => {
 });
 services.AddEndpointsApiExplorer();
 services.Configure<AppSettings>(configuration.GetSection(nameof(AppSettings)));
-services.AddDbContext<BCSManagementContext>(options => {
-    var appSettings = services.BuildServiceProvider().GetService<IOptions<AppSettings>>().Value;
-    Console.WriteLine(appSettings);
-    options.UseSqlServer(appSettings.ConnectionStrings.BCSManagementDB);
-});
+services.AddBcsDbContext();
 
 services.AddSwaggerGen();
 
