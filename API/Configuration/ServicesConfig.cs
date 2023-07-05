@@ -1,10 +1,10 @@
-﻿using API.Configuration;
+﻿using Domain.Application.AppConfig;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Repository.Context;
 
-namespace API.Utils;
+namespace API.Configuration;
 
 public static class ServicesConfig
 {
@@ -48,7 +48,8 @@ public static class ServicesConfig
 
     public static IServiceCollection AddBcsDbContext(this IServiceCollection services)
     {
-        services.AddDbContext<BCSManagementContext>(options => {
+        services.AddDbContext<BCSManagementContext>(options =>
+        {
             var appSettings = services.BuildServiceProvider().GetService<IOptions<AppSettings>>().Value;
             options.UseSqlServer(appSettings.ConnectionStrings.BCSManagementDB);
         });

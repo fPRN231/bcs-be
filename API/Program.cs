@@ -1,5 +1,6 @@
 using API.Configuration;
 using API.Utils;
+using Domain.Application.AppConfig;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +15,7 @@ var services = builder.Services;
     services.AddEndpointsApiExplorer();
     services.Configure<AppSettings>(configuration.GetSection(nameof(AppSettings)));
     services.AddBcsDbContext();
-
+    services.AddJwtService();
     services.AddSwaggerGen();
 }
 

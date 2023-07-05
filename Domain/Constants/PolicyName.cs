@@ -1,7 +1,4 @@
-﻿using Domain.Constants;
-
-namespace API.Auth;
-
+﻿namespace Domain.Constants;
 public static class PolicyName 
 {
     public const string ADMIN = nameof(Role.Admin);

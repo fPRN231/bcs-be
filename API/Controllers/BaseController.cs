@@ -1,5 +1,5 @@
-﻿using API.Auth;
-using AutoMapper;
+﻿using AutoMapper;
+using Domain.Constants;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -23,8 +23,11 @@ public class BaseController : ControllerBase
         return new Guid(userID.Value);
     }
 
-    public bool IsAdmin => IsCurrentUserAdmin();
-    private bool IsCurrentUserAdmin() {
-        return User.IsInRole(PolicyName.ADMIN);
+    public bool IsAdmin => IsInRole(PolicyName.ADMIN);
+    public bool IsDoctor => IsInRole(PolicyName.DOCTOR);
+    public bool IsStaff => IsInRole(PolicyName.STAFF);
+    public bool IsCustomer => IsInRole(PolicyName.CUSTOMER);
+    private bool IsInRole(string role) {
+        return User.IsInRole(role);
     }
 }
