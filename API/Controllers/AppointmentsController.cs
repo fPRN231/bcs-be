@@ -1,9 +1,11 @@
 ﻿using Domain.Interfaces;
 using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
+[Authorize]
 [Route("/v1/bcs/appointments")]
 public class AppointmentsController : BaseController
 {
