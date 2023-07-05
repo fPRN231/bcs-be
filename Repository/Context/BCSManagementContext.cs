@@ -1,10 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.Extensions.Configuration;
 using Persistence.Context;
-using Persistence.Models;
-using Repository.Models;
 
 namespace Repository.Context;
 

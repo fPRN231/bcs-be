@@ -1,13 +1,7 @@
-using Microsoft.EntityFrameworkCore;
+using Domain.Models;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Persistence.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Persistence.Context
 {

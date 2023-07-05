@@ -1,4 +1,4 @@
-﻿using Persistence.Constants;
+﻿using Domain.Constants;
 
 namespace API.Auth;
 

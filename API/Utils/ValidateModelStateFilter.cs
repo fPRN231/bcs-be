@@ -1,6 +1,5 @@
-﻿using Application.Exceptions;
-using AutoWrapper.Extensions;
-using AutoWrapper.Wrappers;
+﻿using AutoWrapper.Extensions;
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace API.Utils;

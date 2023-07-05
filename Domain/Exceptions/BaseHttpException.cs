@@ -1,6 +1,6 @@
 ﻿using AutoWrapper.Wrappers;
 
-namespace Application.Exceptions;
+namespace Domain.Exceptions;
 
 public abstract class BaseHttpException : ApiException
 {

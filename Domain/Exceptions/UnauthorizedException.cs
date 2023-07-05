@@ -1,7 +1,7 @@
 ﻿using AutoWrapper.Wrappers;
 using Microsoft.AspNetCore.Http;
 
-namespace Application.Exceptions;
+namespace Domain.Exceptions;
 
 public class UnauthorizedException : BaseHttpException
 {
