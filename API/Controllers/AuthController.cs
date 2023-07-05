@@ -5,6 +5,9 @@ using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace API.Controllers;
 
@@ -24,7 +27,6 @@ public class AuthController : BaseController
         var user = await _userRepo.FirstOrDefaultAsync(
             u => u.Email.Equals(credentials.Email) && u.Password.Equals(credentials.Password)
             );
-
         LoginResponse loginResponse = new();
         if (user == null)
         {
@@ -32,7 +34,7 @@ public class AuthController : BaseController
         }
         else
         {
-            loginResponse.AccessToken = "authenticationService.GenerateToken(user)";
+            loginResponse.AccessToken = GenerateToken(user);
             SetCookie(Constants.ACCESS_TOKEN, loginResponse.AccessToken);
         }
         return Ok(loginResponse);
@@ -43,6 +45,23 @@ public class AuthController : BaseController
     {
         RemoveCookie(Constants.ACCESS_TOKEN);
         return Ok();
+    }
+
+    private string GenerateToken(User user)
+    {
+        var claims = new[] {
+                new Claim("id", user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role.ToString())
+            };
+        return new JwtSecurityTokenHandler().WriteToken(
+            GenerateTokenByClaims(claims, DateTime.Now.AddMinutes(120))
+            );
+    }
+
+    private SecurityToken GenerateTokenByClaims(Claim[] claims, DateTime dateTime)
+    {
+        throw new NotImplementedException();
     }
 
     private void RemoveCookie(string key)
