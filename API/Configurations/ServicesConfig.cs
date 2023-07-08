@@ -6,7 +6,7 @@ using Microsoft.OpenApi.Models;
 using Persistence.Repositories;
 using Repository.Context;
 
-namespace API.Configuration;
+namespace API.Configurations;
 
 public static class ServicesConfig
 {
