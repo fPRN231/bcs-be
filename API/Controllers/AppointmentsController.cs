@@ -1,4 +1,5 @@
-﻿using API.Models.Request;
+﻿using API.Models.Request.Appointments;
+using Domain.Constants;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
@@ -12,10 +13,14 @@ namespace API.Controllers;
 public class AppointmentsController : BaseController
 {
     private readonly IRepositoryBase<Appointment> _appointmentRepostory;
+    private readonly IRepositoryBase<DoctorLogTime> _doctorLogTimeRepostory;
+    private readonly IRepositoryBase<User> _userRepository;
 
-    public AppointmentsController(IRepositoryBase<Appointment> appointmentRepostory)
+    public AppointmentsController(IRepositoryBase<Appointment> appointmentRepostory, IRepositoryBase<DoctorLogTime> doctorLogTimeRepostory, IRepositoryBase<User> userRepository)
     {
         _appointmentRepostory = appointmentRepostory;
+        _doctorLogTimeRepostory = doctorLogTimeRepostory;
+        _userRepository = userRepository;
     }
 
     [HttpGet]
@@ -35,6 +40,7 @@ public class AppointmentsController : BaseController
     public async Task<IActionResult> CreateAppointment([FromBody] CreateAppointmentRequest req)
     {
         Appointment entity = Mapper.Map(req, new Appointment());
+        entity.AppointmentStatus = AppointmentStatus.Pending;
         await _appointmentRepostory.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);
     }
@@ -53,6 +59,33 @@ public class AppointmentsController : BaseController
     {
         var target = await _appointmentRepostory.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
         await _appointmentRepostory.DeleteAsync(target);
+        return StatusCode(StatusCodes.Status204NoContent);
+    }
+
+    [HttpPatch("{id}/confirmed")]
+    public async Task<IActionResult> ConfirmAppointment (Guid id)
+    {
+        var target = await _appointmentRepostory.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
+        target.AppointmentStatus = AppointmentStatus.Confirmed;
+        await _appointmentRepostory.UpdateAsync(target);
+        return StatusCode(StatusCodes.Status204NoContent);
+    }
+
+    [HttpPatch("{id}/completed")]
+    public async Task<IActionResult> CompleteAppointment(Guid id)
+    {
+        var target = await _appointmentRepostory.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
+        target.AppointmentStatus = AppointmentStatus.Completed;
+        await _appointmentRepostory.UpdateAsync(target);
+        return StatusCode(StatusCodes.Status204NoContent);
+    }
+
+    [HttpPatch("{id}/cancelled")]
+    public async Task<IActionResult> CancelAppointment(Guid id)
+    {
+        var target = await _appointmentRepostory.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
+        target.AppointmentStatus = AppointmentStatus.Cancelled;
+        await _appointmentRepostory.UpdateAsync(target);
         return StatusCode(StatusCodes.Status204NoContent);
     }
 }

@@ -2,7 +2,7 @@
 using Domain.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace API.Models.Request
+namespace API.Models.Request.MedicalHistories
 {
     public class UpdateMedicalHistoryRequest : IMapTo<MedicalHistory>
     {

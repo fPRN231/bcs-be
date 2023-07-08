@@ -1,4 +1,4 @@
-﻿using API.Models.Request;
+﻿using API.Models.Request.Auth;
 using API.Models.Response;
 using Domain.Application.AppConfig;
 using Domain.Constants;

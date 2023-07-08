@@ -2,7 +2,7 @@
 using Domain.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace API.Models.Request
+namespace API.Models.Request.Feedbacks
 {
     public class UpdateFeedbackRequest : IMapTo<Bird>
     {

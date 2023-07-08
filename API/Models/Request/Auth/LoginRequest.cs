@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace API.Models.Request;
+namespace API.Models.Request.Auth;
 
 public class LoginRequest
 {

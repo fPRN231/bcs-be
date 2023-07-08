@@ -3,7 +3,7 @@ using Domain.Constants;
 using Domain.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace API.Models.Request
+namespace API.Models.Request.Users
 {
     public class CreateUserRequest : IMapTo<User>
     {

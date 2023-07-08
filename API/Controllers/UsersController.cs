@@ -1,4 +1,4 @@
-﻿using API.Models.Request;
+﻿using API.Models.Request.Users;
 using Domain.Constants;
 using Domain.Exceptions;
 using Domain.Interfaces;

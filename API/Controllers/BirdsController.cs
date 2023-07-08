@@ -1,4 +1,4 @@
-﻿using API.Models.Request;
+﻿using API.Models.Request.Birds;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;

@@ -1,4 +1,4 @@
-﻿using API.Models.Request;
+﻿using API.Models.Request.DoctorInfos;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;

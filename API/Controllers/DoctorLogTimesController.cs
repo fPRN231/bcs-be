@@ -1,4 +1,4 @@
-﻿using API.Models.Request;
+﻿using API.Models.Request.DoctorInfos;
 using Domain.Constants;
 using Domain.Exceptions;
 using Domain.Interfaces;
@@ -38,17 +38,7 @@ public class DoctorLogTimesController : BaseController
     {
         IOrderedEnumerable<DoctorLogTime> availableLogTimes;
         availableLogTimes = (await _doctorLogTimeRepository.WhereAsync(x => x.DoctorId.Equals(doctorId)))
-                                                           .OrderBy(c => c.LogDateTime);
-        //if (date != null || time != null)
-        //{
-        //    //Bo sung vao sau
-        //}
-        //else
-        //{
-        //    availableLogTimes = (await _doctorLogTimeRepository.WhereAsync(x => x.Date.Equals(date) && x.Time.Equals(time)))
-        //                                                       .OrderBy(c => c.Date);
-        //}
-
+                                                           .OrderBy(c => c.StartTime);
         return Ok(availableLogTimes);
     }
 

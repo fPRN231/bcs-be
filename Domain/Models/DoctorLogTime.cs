@@ -7,7 +7,9 @@ public partial class DoctorLogTime : BaseEntity
 
     public virtual User Doctor { get; set; }
 
-    public DateTime LogDateTime { get; set; }
+    public DateTime StartTime { get; set; }
+
+    public DateTime EndTime { get; set; }
 
     public bool IsAvailable { get; set; }
 }

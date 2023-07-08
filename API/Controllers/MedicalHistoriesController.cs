@@ -1,5 +1,5 @@
 ﻿using API.Models;
-using API.Models.Request;
+using API.Models.Request.MedicalHistories;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
