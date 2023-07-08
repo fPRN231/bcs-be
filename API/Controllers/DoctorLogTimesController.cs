@@ -33,29 +33,21 @@ public class DoctorLogTimesController : BaseController
         return Ok(target);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAvailableLogTimes(DateOnly? date, TimeOnly? time, Guid? doctorId)
+    [HttpGet("{doctorId}")]
+    public async Task<IActionResult> GetAvailableLogTimes(Guid doctorId)
     {
         IOrderedEnumerable<DoctorLogTime> availableLogTimes;
-        if (doctorId != null)
-        {
-            availableLogTimes = (await _doctorLogTimeRepository.WhereAsync(x => x.DoctorId.Equals(doctorId)))
-                                                               .OrderBy(c => c.Date);
-        }
-        else
-        {
-            availableLogTimes = (await _doctorLogTimeRepository.ToListAsync()).OrderBy(c => c.Date);
-        }
-
-        if (date != null || time != null)
-        {
-            //Bo sung vao sau
-        }
-        else
-        {
-            availableLogTimes = (await _doctorLogTimeRepository.WhereAsync(x => x.Date.Equals(date) && x.Time.Equals(time)))
-                                                               .OrderBy(c => c.Date);
-        }
+        availableLogTimes = (await _doctorLogTimeRepository.WhereAsync(x => x.DoctorId.Equals(doctorId)))
+                                                           .OrderBy(c => c.LogDateTime);
+        //if (date != null || time != null)
+        //{
+        //    //Bo sung vao sau
+        //}
+        //else
+        //{
+        //    availableLogTimes = (await _doctorLogTimeRepository.WhereAsync(x => x.Date.Equals(date) && x.Time.Equals(time)))
+        //                                                       .OrderBy(c => c.Date);
+        //}
 
         return Ok(availableLogTimes);
     }

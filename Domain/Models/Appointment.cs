@@ -10,9 +10,8 @@ public partial class Appointment : BaseEntity
         Services = new HashSet<Service>();
     }
 
-    public DateOnly Date { get; set; }
+    public DateTime AppointmentDateTime { get; set; }
 
-    public TimeOnly Time { get; set; }
     public string Prescription { get; set; }
 
     public Guid BirdId { get; set; }

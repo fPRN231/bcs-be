@@ -12,12 +12,10 @@ namespace API.Controllers;
 public class AppointmentsController : BaseController
 {
     private readonly IRepositoryBase<Appointment> _appointmentRepostory;
-    private readonly IRepositoryBase<DoctorLogTime> _doctorLogTimeRepository;
 
-    public AppointmentsController(IRepositoryBase<Appointment> appointmentRepostory, IRepositoryBase<DoctorLogTime> doctorLogTimeRepository)
+    public AppointmentsController(IRepositoryBase<Appointment> appointmentRepostory)
     {
         _appointmentRepostory = appointmentRepostory;
-        _doctorLogTimeRepository = doctorLogTimeRepository;
     }
 
     [HttpGet]

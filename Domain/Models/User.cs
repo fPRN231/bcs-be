@@ -10,8 +10,9 @@ public partial class User : BaseEntity
         BirdsOwned = new HashSet<Bird>();
         DoctorLogTimes = new HashSet<DoctorLogTime>();
     }
-
     public string Name { get; set; }
+
+    public string Username { get; set; }
     
     public string PhoneNumber { get; set; }
 

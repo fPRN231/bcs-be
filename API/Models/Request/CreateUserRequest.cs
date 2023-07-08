@@ -11,6 +11,9 @@ namespace API.Models.Request
         public string Name { get; set; }
 
         [Required]
+        public string Username { get; set; }
+
+        [Required]
         public string PhoneNumber { get; set; }
 
         [Required]

@@ -27,25 +27,25 @@ public class BCSManagementContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        #region Convert DateOnly & TimeOnly
-        modelBuilder.Entity<DoctorLogTime>(builder =>
-        {
-            builder.Property(x => x.Date)
-                .HasConversion<DateOnlyConverter, DateOnlyComparer>();
+        //#region Convert DateOnly & TimeOnly
+        //modelBuilder.Entity<DoctorLogTime>(builder =>
+        //{
+        //    builder.Property(x => x.Date)
+        //        .HasConversion<DateOnlyConverter, DateOnlyComparer>();
 
-            builder.Property(x => x.Time)
-                .HasConversion<TimeOnlyConverter, TimeOnlyComparer>();
-        });
+        //    builder.Property(x => x.Time)
+        //        .HasConversion<TimeOnlyConverter, TimeOnlyComparer>();
+        //});
 
-        modelBuilder.Entity<Appointment>(builder =>
-        {
-            builder.Property(x => x.Date)
-                .HasConversion<DateOnlyConverter, DateOnlyComparer>();
+        //modelBuilder.Entity<Appointment>(builder =>
+        //{
+        //    builder.Property(x => x.Date)
+        //        .HasConversion<DateOnlyConverter, DateOnlyComparer>();
 
-            builder.Property(x => x.Time)
-                .HasConversion<TimeOnlyConverter, TimeOnlyComparer>();
-        });
-        #endregion
+        //    builder.Property(x => x.Time)
+        //        .HasConversion<TimeOnlyConverter, TimeOnlyComparer>();
+        //});
+        //#endregion
 
         base.OnModelCreating(modelBuilder);
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
@@ -71,40 +71,40 @@ public class BCSManagementContext : DbContext
 
     }
 
-    #region Classes For DateOnly & TimeOnly
-    public class DateOnlyConverter : ValueConverter<DateOnly, DateTime>
-    {
-        public DateOnlyConverter() : base(
-                dateOnly => dateOnly.ToDateTime(TimeOnly.MinValue),
-                dateTime => DateOnly.FromDateTime(dateTime))
-        {
-        }
-    }
+    //#region Classes For DateOnly & TimeOnly
+    //public class DateOnlyConverter : ValueConverter<DateOnly, DateTime>
+    //{
+    //    public DateOnlyConverter() : base(
+    //            dateOnly => dateOnly.ToDateTime(TimeOnly.MinValue),
+    //            dateTime => DateOnly.FromDateTime(dateTime))
+    //    {
+    //    }
+    //}
 
-    public class DateOnlyComparer : ValueComparer<DateOnly>
-    {
-        public DateOnlyComparer() : base(
-            (d1, d2) => d1.DayNumber == d2.DayNumber,
-            d => d.GetHashCode())
-        {
-        }
-    }
-    public class TimeOnlyConverter : ValueConverter<TimeOnly, TimeSpan>
-    {
-        public TimeOnlyConverter() : base(
-                timeOnly => timeOnly.ToTimeSpan(),
-                timeSpan => TimeOnly.FromTimeSpan(timeSpan))
-        {
-        }
-    }
+    //public class DateOnlyComparer : ValueComparer<DateOnly>
+    //{
+    //    public DateOnlyComparer() : base(
+    //        (d1, d2) => d1.DayNumber == d2.DayNumber,
+    //        d => d.GetHashCode())
+    //    {
+    //    }
+    //}
+    //public class TimeOnlyConverter : ValueConverter<TimeOnly, TimeSpan>
+    //{
+    //    public TimeOnlyConverter() : base(
+    //            timeOnly => timeOnly.ToTimeSpan(),
+    //            timeSpan => TimeOnly.FromTimeSpan(timeSpan))
+    //    {
+    //    }
+    //}
 
-    public class TimeOnlyComparer : ValueComparer<TimeOnly>
-    {
-        public TimeOnlyComparer() : base(
-            (t1, t2) => t1.Ticks == t2.Ticks,
-            t => t.GetHashCode())
-        {
-        }
-    }
-    #endregion
+    //public class TimeOnlyComparer : ValueComparer<TimeOnly>
+    //{
+    //    public TimeOnlyComparer() : base(
+    //        (t1, t2) => t1.Ticks == t2.Ticks,
+    //        t => t.GetHashCode())
+    //    {
+    //    }
+    //}
+    //#endregion
 }

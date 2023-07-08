@@ -7,10 +7,7 @@ namespace API.Models.Request
     public class CreateDoctorLogTimeRequest : IMapTo<DoctorInfo>
     {
         [Required]
-        public DateOnly Date { get; set; }
-
-        [Required]
-        public TimeOnly Time { get; set; }
+        public DateOnly LogDateTime { get; set; }
 
         [Required]
         public bool IsAvailable { get; set; }
