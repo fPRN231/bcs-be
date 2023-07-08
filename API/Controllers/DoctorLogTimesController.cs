@@ -1,9 +1,11 @@
 ﻿using API.Models.Request;
+using Domain.Constants;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace API.Controllers;
 
@@ -31,6 +33,33 @@ public class DoctorLogTimesController : BaseController
         return Ok(target);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetAvailableLogTimes(DateOnly? date, TimeOnly? time, Guid? doctorId)
+    {
+        IOrderedEnumerable<DoctorLogTime> availableLogTimes;
+        if (doctorId != null)
+        {
+            availableLogTimes = (await _doctorLogTimeRepository.WhereAsync(x => x.DoctorId.Equals(doctorId)))
+                                                               .OrderBy(c => c.Date);
+        }
+        else
+        {
+            availableLogTimes = (await _doctorLogTimeRepository.ToListAsync()).OrderBy(c => c.Date);
+        }
+
+        if (date != null || time != null)
+        {
+            //Bo sung vao sau
+        }
+        else
+        {
+            availableLogTimes = (await _doctorLogTimeRepository.WhereAsync(x => x.Date.Equals(date) && x.Time.Equals(time)))
+                                                               .OrderBy(c => c.Date);
+        }
+
+        return Ok(availableLogTimes);
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateDoctorLogTime([FromBody] CreateDoctorInfoRequest req)
     {
@@ -56,4 +85,5 @@ public class DoctorLogTimesController : BaseController
         await _doctorLogTimeRepository.DeleteAsync(target);
         return StatusCode(StatusCodes.Status204NoContent);
     }
+
 }
