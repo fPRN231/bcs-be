@@ -4,9 +4,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.Models.Request.Appointments
 {
-    public class SelectAppointmentServices : IMapTo<Appointment>
+    public class SelectAppointmentTimeAndServices : IMapTo<Appointment>
     {
         [Required]
+        public DateTime AppointmentDateTime { get; set; }
+
         public virtual ICollection<Service> Services { get; set; }
     }
 }
