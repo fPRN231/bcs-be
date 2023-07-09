@@ -31,10 +31,11 @@ public class FeedbacksController : BaseController
         return Ok(target);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateFeedback([FromBody] CreateFeedbackRequest req)
+    [HttpPost("{id}")]
+    public async Task<IActionResult> CreateFeedback(Guid appointmentId, [FromBody] CreateFeedbackRequest req)
     {
         Feedback entity = Mapper.Map(req, new Feedback());
+        entity.AppointmentId = appointmentId;
         entity.UserId = CurrentUserID;
         await _feedbackRepository.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);

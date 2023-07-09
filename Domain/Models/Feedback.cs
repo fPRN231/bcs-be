@@ -9,7 +9,7 @@ public partial class Feedback : BaseEntity
 
     public Guid UserId { get; set; }
 
-    public string AppointmentId { get; set; }
+    public Guid AppointmentId { get; set; }
 
     public virtual User User { get; set; }
 

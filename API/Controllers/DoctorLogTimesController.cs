@@ -1,4 +1,5 @@
 ﻿using API.Models.Request.DoctorInfos;
+using API.Models.Request.DoctorLogTimes;
 using Domain.Constants;
 using Domain.Exceptions;
 using Domain.Interfaces;
@@ -43,7 +44,7 @@ public class DoctorLogTimesController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateDoctorLogTime([FromBody] CreateDoctorInfoRequest req)
+    public async Task<IActionResult> CreateDoctorLogTime([FromBody] CreateDoctorLogTimeRequest req)
     {
         DoctorLogTime entity = Mapper.Map(req, new DoctorLogTime());
         entity.DoctorId = CurrentUserID;
@@ -52,7 +53,7 @@ public class DoctorLogTimesController : BaseController
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateDoctorLogTime(Guid id, [FromBody] UpdateDoctorInfoRequest req)
+    public async Task<IActionResult> UpdateDoctorLogTime(Guid id, [FromBody] UpdateDoctorLogTimeRequest req)
     {
         var target = await _doctorLogTimeRepository.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
         DoctorLogTime entity = Mapper.Map(req, target);
