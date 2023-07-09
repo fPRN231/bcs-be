@@ -7,20 +7,14 @@ namespace API.Models.Request.Auth;
 
 public class RegisterRequest : IMapTo<User>
 {
-    [Required]
-    public string Name { get; set; }
+    [Required, MinLength(3), MaxLength(32)]
+    public string Username { get; set; }
 
-    [Required, Phone]
-
-    public string PhoneNumber { get; set; }
-
-    public string Address { get; set; }
-
-    [Required, EmailAddress]
-    public string Email { get; set; }
-
-    [Required]
+    [Required, MinLength(3), MaxLength(32)]
     public string Password { get; set; }
+
+    [Required, MinLength(3), MaxLength(32)]
+    public string ReEnteredPassword { get; set; }
 
     [Required]
     public Role Role { get; set; }

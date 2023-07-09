@@ -4,9 +4,9 @@ namespace API.Models.Request.Auth;
 
 public class LoginRequest
 {
-    [Required, EmailAddress]
-    public string Email { get; set; }
+    [Required, MinLength(3), MaxLength(32)]
+    public string Username { get; set; }
 
-    [Required]
+    [Required, MinLength(3), MaxLength(32)]
     public string Password { get; set; }
 }

@@ -18,19 +18,19 @@ namespace API.Controllers;
 [Route("/v1/bcs/auth")]
 public class AuthController : BaseController
 {
-    private readonly IRepositoryBase<User> _userRepo;
+    private readonly IRepositoryBase<User> _usrRepo;
     private readonly AppSettings _appSettings;
 
-    public AuthController(IRepositoryBase<User> userRepo, IOptions<AppSettings> appSettings)
+    public AuthController(IRepositoryBase<User> usrRepo, IOptions<AppSettings> appSettings)
     {
-        _userRepo = userRepo;
+        _usrRepo = usrRepo;
         _appSettings = appSettings.Value;
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest credentials)
     {
-        var user = await _userRepo.FirstOrDefaultAsync(u => u.Email.Equals(credentials.Email));
+        var user = await _usrRepo.FirstOrDefaultAsync(u => u.Username.Equals(credentials.Username));
         LoginResponse loginResponse = new();
         if (user == null)
         {
@@ -53,7 +53,11 @@ public class AuthController : BaseController
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest registerRequest)
     {
-        var userSdb = await _userRepo.FirstOrDefaultAsync(u => u.Email == registerRequest.Email);
+        if (!registerRequest.Password.Equals(registerRequest.ReEnteredPassword))
+        {
+            throw new BadRequestException("Re-entered password incorrect");
+        }
+        var userSdb = await _usrRepo.FirstOrDefaultAsync(u => u.Username == registerRequest.Username);
         if (userSdb != null)
         {
             throw new BadRequestException("User already exist");
@@ -61,7 +65,7 @@ public class AuthController : BaseController
         var passwordHasher = new PasswordHasher<User>();
         var user = Mapper.Map(registerRequest, new User());
         user.Password = passwordHasher.HashPassword(user, user.Password);
-        await _userRepo.CreateAsync(user);
+        await _usrRepo.CreateAsync(user);
         var response = Mapper.Map(user, new RegisterResponse());
         return Ok(response);
     }
@@ -77,7 +81,7 @@ public class AuthController : BaseController
     {
         var claims = new[] {
                 new Claim("id", user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.Username),
                 new Claim(ClaimTypes.Role, user.Role.ToString())
             };
         return new JwtSecurityTokenHandler().WriteToken(
