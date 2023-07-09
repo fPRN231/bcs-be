@@ -18,9 +18,9 @@ public partial class Appointment : BaseEntity
 
     public Guid DoctorId { get; set; }
 
-    public virtual User Doctor { get; set; }
-
     public virtual AppointmentStatus AppointmentStatus { get; set; }
+
+    public virtual User Doctor { get; set; }
 
     [JsonIgnore]
     public virtual ICollection<Service> Services { get; set; }
