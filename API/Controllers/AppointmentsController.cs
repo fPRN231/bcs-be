@@ -46,17 +46,8 @@ public class AppointmentsController : BaseController
         return StatusCode(StatusCodes.Status201Created);
     }
 
-    [HttpPost("booking/select-time")]
-    public async Task<IActionResult> SelectAppointmentTime(Guid Id, [FromBody] SelectAppointmentDateTime req)
-    {
-        var target = await _appointmentRepostory.FoundOrThrow(c => c.Id.Equals(Id), new NotFoundException());
-        Appointment entity = Mapper.Map(req, target);
-        await _appointmentRepostory.UpdateAsync(entity);
-        return StatusCode(StatusCodes.Status204NoContent);
-    }
-
-    [HttpPost("booking/select-services")]
-    public async Task<IActionResult> SelectAppointmentServices(Guid Id, [FromBody] SelectAppointmentServices req)
+    [HttpPost("booking/select-time-services")]
+    public async Task<IActionResult> SelectAppointmentTimeAndServices(Guid Id, [FromBody] SelectAppointmentTimeAndServices req)
     {
         var target = await _appointmentRepostory.FoundOrThrow(c => c.Id.Equals(Id), new NotFoundException());
         Appointment entity = Mapper.Map(req, target);
