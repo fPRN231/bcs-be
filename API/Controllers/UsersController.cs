@@ -23,6 +23,12 @@ public class UsersController : BaseController
         return Ok(await _userRepostory.ToListAsync());
     }
 
+    [HttpGet("doctors")]
+    public async Task<IActionResult> GetDoctors()
+    {
+        return Ok(await _userRepostory.WhereAsync(x=> x.Role.Equals(Role.Doctor)));
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUser(Guid id)
     {

@@ -5,6 +5,7 @@ using Domain.Constants;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -75,6 +76,14 @@ public class AuthController : BaseController
     {
         RemoveCookie(Constants.ACCESS_TOKEN);
         return Ok();
+    }
+
+    [Authorize]
+    [HttpGet("profile")]
+    public async Task<IActionResult> GetProfile()
+    {
+        var usr = await _usrRepo.FoundOrThrow(u => u.Id.Equals(CurrentUserID) , new UnauthorizedException());
+        return Ok(usr);
     }
 
     private string GenerateToken(User user)

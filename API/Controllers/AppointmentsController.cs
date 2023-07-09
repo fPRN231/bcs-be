@@ -36,6 +36,35 @@ public class AppointmentsController : BaseController
         return Ok(target);
     }
 
+    [HttpPost("booking/select-doctor")]
+    public async Task<IActionResult> SelectAppointmentDoctor([FromBody] SelectAppointmentDoctor req)
+    {
+        Appointment entity = Mapper.Map(req, new Appointment());
+        entity.DoctorId = req.DoctorId;
+        entity.AppointmentStatus = AppointmentStatus.Draft;
+        await _appointmentRepostory.CreateAsync(entity);
+        return StatusCode(StatusCodes.Status201Created);
+    }
+
+    [HttpPost("booking/select-time-services")]
+    public async Task<IActionResult> SelectAppointmentTimeAndServices(Guid Id, [FromBody] SelectAppointmentTimeAndServices req)
+    {
+        var target = await _appointmentRepostory.FoundOrThrow(c => c.Id.Equals(Id), new NotFoundException());
+        Appointment entity = Mapper.Map(req, target);
+        await _appointmentRepostory.UpdateAsync(entity);
+        return StatusCode(StatusCodes.Status204NoContent);
+    }
+
+    [HttpPost("booking/complete-form")]
+    public async Task<IActionResult> CompleteAppointmentForm(Guid Id, [FromBody] CompleteAppointmentForm req)
+    {
+        var target = await _appointmentRepostory.FoundOrThrow(c => c.Id.Equals(Id), new NotFoundException());
+        Appointment entity = Mapper.Map(req, target);
+        entity.AppointmentStatus = AppointmentStatus.Pending;
+        await _appointmentRepostory.UpdateAsync(entity);
+        return StatusCode(StatusCodes.Status204NoContent);
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateAppointment([FromBody] CreateAppointmentRequest req)
     {
@@ -88,4 +117,6 @@ public class AppointmentsController : BaseController
         await _appointmentRepostory.UpdateAsync(target);
         return StatusCode(StatusCodes.Status204NoContent);
     }
+
+    
 }
