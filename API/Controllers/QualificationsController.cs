@@ -12,10 +12,12 @@ namespace API.Controllers;
 public class QualificationsController : BaseController
 {
     private readonly IRepositoryBase<Qualification> _qualificationRepository;
+    private readonly IRepositoryBase<User> _userRepository;
 
-    public QualificationsController(IRepositoryBase<Qualification> qualificationRepository)
+    public QualificationsController(IRepositoryBase<Qualification> qualificationRepository, IRepositoryBase<User> userRepository)
     {
         _qualificationRepository = qualificationRepository;
+        _userRepository = userRepository;
     }
 
 
@@ -30,6 +32,7 @@ public class QualificationsController : BaseController
     {
         Qualification entity = Mapper.Map(req, new Qualification());
         entity.DoctorId = CurrentUserID;
+        entity.User = await _userRepository.FirstOrDefaultAsync(x => x.Id.Equals(entity.DoctorId));
         await _qualificationRepository.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);
     }

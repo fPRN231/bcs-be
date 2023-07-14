@@ -1,5 +1,6 @@
 ﻿using API.Models.Request.DoctorInfos;
 using API.Models.Request.DoctorLogTimes;
+using AutoWrapper.Filters;
 using Domain.Constants;
 using Domain.Exceptions;
 using Domain.Interfaces;
@@ -15,10 +16,12 @@ namespace API.Controllers;
 public class DoctorLogTimesController : BaseController
 {
     private readonly IRepositoryBase<DoctorLogTime> _doctorLogTimeRepository;
+    private readonly IRepositoryBase<User> _userRepository;
 
-    public DoctorLogTimesController(IRepositoryBase<DoctorLogTime> doctorLogTimeRepository)
+    public DoctorLogTimesController(IRepositoryBase<DoctorLogTime> doctorLogTimeRepository, IRepositoryBase<User> userRepository)
     {
         _doctorLogTimeRepository = doctorLogTimeRepository;
+        _userRepository = userRepository;
     }
 
     [HttpGet]
@@ -48,6 +51,7 @@ public class DoctorLogTimesController : BaseController
     {
         DoctorLogTime entity = Mapper.Map(req, new DoctorLogTime());
         entity.DoctorId = CurrentUserID;
+        entity.Doctor = await _userRepository.FirstOrDefaultAsync(x => x.Id.Equals(entity.DoctorId));
         await _doctorLogTimeRepository.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);
     }

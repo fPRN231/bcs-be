@@ -13,13 +13,11 @@ namespace API.Controllers;
 public class AppointmentsController : BaseController
 {
     private readonly IRepositoryBase<Appointment> _appointmentRepostory;
-    private readonly IRepositoryBase<DoctorLogTime> _doctorLogTimeRepostory;
     private readonly IRepositoryBase<User> _userRepository;
 
     public AppointmentsController(IRepositoryBase<Appointment> appointmentRepostory, IRepositoryBase<DoctorLogTime> doctorLogTimeRepostory, IRepositoryBase<User> userRepository)
     {
         _appointmentRepostory = appointmentRepostory;
-        _doctorLogTimeRepostory = doctorLogTimeRepostory;
         _userRepository = userRepository;
     }
 
@@ -41,6 +39,7 @@ public class AppointmentsController : BaseController
     {
         Appointment entity = Mapper.Map(req, new Appointment());
         entity.DoctorId = req.DoctorId;
+        entity.Doctor = await _userRepository.FirstOrDefaultAsync(x => x.Id.Equals(entity.DoctorId));
         entity.AppointmentStatus = AppointmentStatus.Draft;
         await _appointmentRepostory.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);

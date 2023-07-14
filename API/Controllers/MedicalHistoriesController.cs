@@ -13,9 +13,11 @@ namespace API.Controllers;
 public class MedicalHistoriesController : BaseController
 {
     private readonly IRepositoryBase<MedicalHistory> _medicalHistoryRepository;
-    public MedicalHistoriesController(IRepositoryBase<MedicalHistory> medicalHistoryRepository)
+    private readonly IRepositoryBase<Bird> _birdRepository;
+    public MedicalHistoriesController(IRepositoryBase<MedicalHistory> medicalHistoryRepository, IRepositoryBase<Bird> birdRepository)
     {
         _medicalHistoryRepository = medicalHistoryRepository;
+        _birdRepository = birdRepository;
     }
 
     [HttpGet]
@@ -32,15 +34,17 @@ public class MedicalHistoriesController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateMedicalHistory([FromBody] CreateMedicalHistoryRequest req)
+    public async Task<IActionResult> CreateMedicalHistory(Guid birdId, [FromBody] CreateMedicalHistoryRequest req)
     {
         MedicalHistory entity = Mapper.Map(req, new MedicalHistory());
+        entity.BirdId = birdId;
+        entity.Bird = await _birdRepository.FirstOrDefaultAsync(x => x.Id.Equals(birdId));
         await _medicalHistoryRepository.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateDoctorInfo(Guid id, [FromBody] UpdateMedicalHistoryRequest req)
+    public async Task<IActionResult> UpdateMedicalHistory(Guid id, [FromBody] UpdateMedicalHistoryRequest req)
     {
         var target = await _medicalHistoryRepository.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
         MedicalHistory entity = Mapper.Map(req, target);
@@ -49,7 +53,7 @@ public class MedicalHistoriesController : BaseController
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteDoctorInfo(Guid id)
+    public async Task<IActionResult> DeleteMedicalHistory(Guid id)
     {
         var target = await _medicalHistoryRepository.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
         await _medicalHistoryRepository.DeleteAsync(target);

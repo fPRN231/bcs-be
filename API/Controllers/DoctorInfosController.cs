@@ -12,10 +12,12 @@ namespace API.Controllers;
 public class DoctorInfosController : BaseController
 {
     private readonly IRepositoryBase<DoctorInfo> _doctorInfoRepository;
+    private readonly IRepositoryBase<User> _userRepository;
 
-    public DoctorInfosController(IRepositoryBase<DoctorInfo> doctorInfoRepository)
+    public DoctorInfosController(IRepositoryBase<DoctorInfo> doctorInfoRepository, IRepositoryBase<User> userRepository)
     {
         _doctorInfoRepository = doctorInfoRepository;
+        _userRepository = userRepository;
     }
 
     [HttpGet("{id}")]
@@ -30,6 +32,7 @@ public class DoctorInfosController : BaseController
     {
         DoctorInfo entity = Mapper.Map(req, new DoctorInfo());
         entity.DoctorId = CurrentUserID;
+        entity.Doctor = await _userRepository.FirstOrDefaultAsync(x => x.Id.Equals(entity.DoctorId));
         await _doctorInfoRepository.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);
     }
