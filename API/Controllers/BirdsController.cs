@@ -37,7 +37,7 @@ public class BirdsController : BaseController
     public async Task<IActionResult> CreateBird([FromBody] CreateBirdRequest req)
     {
         Bird entity = Mapper.Map(req, new Bird());
-        entity.User = await _userRepostory.FirstOrDefaultAsync(x => x.Id.Equals(entity.UserId));
+        entity.UserId = CurrentUserID;
         entity.CreatedAt = DateTime.Now;
         await _birdRepostory.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);

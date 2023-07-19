@@ -10,12 +10,12 @@ public partial class Appointment : BaseEntity
         Services = new HashSet<Service>();
     }
 
-    public Guid DoctorLogTimeId { get; set; }
+    public Guid? DoctorLogTimeId { get; set; }
     public virtual DoctorLogTime DoctorLogTime { get; set; }
 
-    public DateTime StartDateTime { get; set; }
+    public DateTime? StartDateTime { get; set; }
 
-    public DateTime EndDateTime { get; set; }
+    public DateTime? EndDateTime { get; set; }
 
     public string? Prescription { get; set; }
 

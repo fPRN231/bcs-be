@@ -5,6 +5,7 @@ using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace API.Controllers;
 
@@ -14,11 +15,13 @@ public class AppointmentsController : BaseController
 {
     private readonly IRepositoryBase<Appointment> _appointmentRepostory;
     private readonly IRepositoryBase<User> _userRepository;
+    private readonly IRepositoryBase<DoctorLogTime> _doctorLogTimeRepository;
 
-    public AppointmentsController(IRepositoryBase<Appointment> appointmentRepostory, IRepositoryBase<DoctorLogTime> doctorLogTimeRepostory, IRepositoryBase<User> userRepository)
+    public AppointmentsController(IRepositoryBase<Appointment> appointmentRepostory, IRepositoryBase<User> userRepository, IRepositoryBase<DoctorLogTime> doctorLogTimeRepository)
     {
         _appointmentRepostory = appointmentRepostory;
         _userRepository = userRepository;
+        _doctorLogTimeRepository = doctorLogTimeRepository;
     }
 
     [HttpGet]
@@ -34,41 +37,45 @@ public class AppointmentsController : BaseController
         return Ok(target);
     }
 
-    [HttpPost("booking/select-doctor")]
-    public async Task<IActionResult> SelectAppointmentDoctor([FromBody] SelectAppointmentDoctor req)
-    {
-        Appointment entity = Mapper.Map(req, new Appointment());
-        entity.AppointmentStatus = AppointmentStatus.Draft;
-        await _appointmentRepostory.CreateAsync(entity);
-        return Ok(entity);
-    }
+    //[HttpPost("booking/{Id}")]
+    //public async Task<IActionResult> SelectAppointmentInformation([FromBody] CreateAppointmentRequest req)
+    //{
+    //    Appointment entity = Mapper.Map(req, new Appointment());
+    //    var doctorLogTime = await _doctorLogTimeRepository.FoundOrThrow(c => c.Id.Equals(req.DoctorLogTimeId), new NotFoundException());
+    //    if (!doctorLogTime.IsAvailable)
+    //    {
+    //        throw new BadRequestException("Unavailable");
+    //    }
+    //    entity.StartDateTime = CreateDayOfWeek(doctorLogTime.DayOfWeek, (int)doctorLogTime.StartTime % 23);
+    //    entity.EndDateTime = CreateDayOfWeek(doctorLogTime.DayOfWeek, (int)doctorLogTime.EndTime % 23);
+    //    entity.AppointmentStatus = AppointmentStatus.Draft;
+    //    await _appointmentRepostory.UpdateAsync(entity);
+    //    return StatusCode(StatusCodes.Status204NoContent);
+    //}
 
-    [HttpPatch("booking/{Id}/select-time-services")]
-    public async Task<IActionResult> SelectAppointmentTimeAndServices(Guid Id, [FromBody] SelectAppointmentTimeAndServices req)
-    {
-        var target = await _appointmentRepostory.FoundOrThrow(c => c.Id.Equals(Id), new NotFoundException());
-        Appointment entity = Mapper.Map(req, target);
-        await _appointmentRepostory.UpdateAsync(entity);
-        return StatusCode(StatusCodes.Status204NoContent);
-    }
-
-    [HttpPatch("booking/complete-form")]
-    public async Task<IActionResult> CompleteAppointmentForm(Guid Id, [FromBody] CompleteAppointmentForm req)
-    {
-        var target = await _appointmentRepostory.FoundOrThrow(c => c.Id.Equals(Id), new NotFoundException());
-        Appointment entity = Mapper.Map(req, target);
-        entity.AppointmentStatus = AppointmentStatus.Pending;
-        entity.CreatedAt = DateTime.Now;
-        await _appointmentRepostory.UpdateAsync(entity);
-        return StatusCode(StatusCodes.Status204NoContent);
-    }
+    //[HttpPatch("booking/complete-form")]
+    //public async Task<IActionResult> CompleteAppointmentForm(Guid Id, [FromBody] CompleteAppointmentForm req)
+    //{
+    //    var target = await _appointmentRepostory.FoundOrThrow(c => c.Id.Equals(Id), new NotFoundException());
+    //    Appointment entity = Mapper.Map(req, target);
+    //    entity.AppointmentStatus = AppointmentStatus.Pending;
+    //    entity.CreatedAt = DateTime.Now;
+    //    await _appointmentRepostory.UpdateAsync(entity);
+    //    return StatusCode(StatusCodes.Status204NoContent);
+    //}
 
     [HttpPost]
     public async Task<IActionResult> CreateAppointment([FromBody] CreateAppointmentRequest req)
     {
         Appointment entity = Mapper.Map(req, new Appointment());
+        var doctorLogTime = await _doctorLogTimeRepository.FoundOrThrow(c => c.Id.Equals(req.DoctorLogTimeId), new NotFoundException());
+        if (!doctorLogTime.IsAvailable)
+        {
+            throw new BadRequestException("Unavailable");
+        }
+        entity.StartDateTime = CreateDayOfWeek(doctorLogTime.DayOfWeek, (int)doctorLogTime.StartTime % 23);
+        entity.EndDateTime = CreateDayOfWeek(doctorLogTime.DayOfWeek, (int)doctorLogTime.EndTime % 23);
         entity.AppointmentStatus = AppointmentStatus.Pending;
-        entity.CreatedAt = DateTime.Now;
         await _appointmentRepostory.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);
     }
@@ -119,5 +126,18 @@ public class AppointmentsController : BaseController
         return StatusCode(StatusCodes.Status204NoContent);
     }
 
-    
+    private DateTime CreateDayOfWeek(DayOfWeek dayOfWeek, int hour, int min = 0)
+    {
+        DateTime dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, hour, min, 0);
+
+
+        // The (... + 7) % 7 ensures we end up with a value in the range [0, 6]
+        int daysUntil = ((int)dayOfWeek - (int)dt.DayOfWeek + 7) % 7;
+        //  DateTime nextTuesday = today.AddDays(daysUntilTuesday);
+
+        dt = dt.AddDays(daysUntil);
+
+        return dt;
+    }
+
 }

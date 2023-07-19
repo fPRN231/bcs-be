@@ -13,7 +13,5 @@ namespace API.Models.Request.Birds
         public int Age { get; set; }
 
         public bool Gender { get; set; }
-
-        public Guid UserId { get; set; }
     }
 }

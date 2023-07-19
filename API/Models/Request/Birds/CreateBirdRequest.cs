@@ -17,8 +17,5 @@ namespace API.Models.Request.Birds
 
         [Required]
         public bool Gender { get; set; }
-
-        [Required]
-        public Guid UserId { get; set; }
     }
 }
