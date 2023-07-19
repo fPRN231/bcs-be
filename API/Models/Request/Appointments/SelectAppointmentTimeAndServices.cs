@@ -7,7 +7,7 @@ namespace API.Models.Request.Appointments
     public class SelectAppointmentTimeAndServices : IMapTo<Appointment>
     {
         [Required]
-        public DateTime AppointmentDateTime { get; set; }
+        public Guid DoctorLogTimeId { get; set; }
 
         public virtual ICollection<Service> Services { get; set; }
     }

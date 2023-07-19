@@ -33,6 +33,13 @@ public class MedicalHistoriesController : BaseController
         return Ok(target);
     }
 
+    [HttpGet("bird/{birdId}")]
+    public async Task<IActionResult> GetMedicalHistoriesOfBird(Guid birdId)
+    {
+        var target = await _medicalHistoryRepository.WhereAsync(x => x.BirdId.Equals(birdId));
+        return Ok(target);
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateMedicalHistory(Guid birdId, [FromBody] CreateMedicalHistoryRequest req)
     {

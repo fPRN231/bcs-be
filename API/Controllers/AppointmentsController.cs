@@ -38,14 +38,12 @@ public class AppointmentsController : BaseController
     public async Task<IActionResult> SelectAppointmentDoctor([FromBody] SelectAppointmentDoctor req)
     {
         Appointment entity = Mapper.Map(req, new Appointment());
-        entity.DoctorId = req.DoctorId;
-        entity.Doctor = await _userRepository.FirstOrDefaultAsync(x => x.Id.Equals(entity.DoctorId));
         entity.AppointmentStatus = AppointmentStatus.Draft;
         await _appointmentRepostory.CreateAsync(entity);
-        return StatusCode(StatusCodes.Status201Created);
+        return Ok(entity);
     }
 
-    [HttpPatch("booking/select-time-services")]
+    [HttpPatch("booking/{Id}/select-time-services")]
     public async Task<IActionResult> SelectAppointmentTimeAndServices(Guid Id, [FromBody] SelectAppointmentTimeAndServices req)
     {
         var target = await _appointmentRepostory.FoundOrThrow(c => c.Id.Equals(Id), new NotFoundException());

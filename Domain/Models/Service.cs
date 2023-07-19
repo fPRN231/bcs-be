@@ -1,4 +1,6 @@
-﻿namespace Domain.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace Domain.Models;
 
 public partial class Service : BaseEntity
 { 

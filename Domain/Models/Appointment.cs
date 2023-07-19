@@ -10,17 +10,24 @@ public partial class Appointment : BaseEntity
         Services = new HashSet<Service>();
     }
 
-    public DateTime AppointmentDateTime { get; set; }
+    public Guid DoctorLogTimeId { get; set; }
+    public virtual DoctorLogTime DoctorLogTime { get; set; }
 
-    public string Prescription { get; set; }
+    public DateTime StartDateTime { get; set; }
 
-    public Guid BirdId { get; set; }
+    public DateTime EndDateTime { get; set; }
+
+    public string? Prescription { get; set; }
+
+    public Guid? BirdId { get; set; }
+
+    public virtual Bird Bird { get; set; }
 
     public Guid DoctorId { get; set; }
 
-    public virtual AppointmentStatus AppointmentStatus { get; set; }
-
     public virtual User Doctor { get; set; }
+
+    public virtual AppointmentStatus AppointmentStatus { get; set; }
 
     [JsonIgnore]
     public virtual ICollection<Service> Services { get; set; }

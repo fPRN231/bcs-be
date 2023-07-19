@@ -21,8 +21,5 @@ namespace API.Models.Request.Appointments
 
         [Required]
         public virtual ICollection<Service> Services { get; set; }
-
-        [Required]
-        public virtual AppointmentStatus AppointmentStatus { get; set; }
     }
 }

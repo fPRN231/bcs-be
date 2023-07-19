@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository.Context;
 
@@ -11,9 +12,10 @@ using Repository.Context;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(BCSManagementContext))]
-    partial class BCSManagementContextModelSnapshot : ModelSnapshot
+    [Migration("20230719113852_addStartEndAppointmentTime")]
+    partial class addStartEndAppointmentTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,9 +45,6 @@ namespace Persistence.Migrations
                     b.Property<Guid>("DoctorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("DoctorLogTimeId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("EndDateTime")
                         .HasColumnType("datetime2");
 
@@ -65,8 +64,6 @@ namespace Persistence.Migrations
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("DoctorId");
-
-                    b.HasIndex("DoctorLogTimeId");
 
                     b.ToTable("Appointments");
                 });
@@ -386,17 +383,9 @@ namespace Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.DoctorLogTime", "DoctorLogTime")
-                        .WithMany()
-                        .HasForeignKey("DoctorLogTimeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Bird");
 
                     b.Navigation("Doctor");
-
-                    b.Navigation("DoctorLogTime");
                 });
 
             modelBuilder.Entity("Domain.Models.Bird", b =>
