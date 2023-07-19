@@ -16,6 +16,6 @@ public class RegisterRequest : IMapTo<User>
     [Required, MinLength(3), MaxLength(32)]
     public string ReEnteredPassword { get; set; }
 
-    [Required, Range(1, 4)]
+    [Required, Range((int) Role.Customer, (int)Role.Staff)]
     public Role Role { get; set; }
 }

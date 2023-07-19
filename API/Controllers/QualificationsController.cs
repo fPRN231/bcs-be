@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[Authorize(Policy = PolicyName.DOCTOR)]
+[Authorize(Roles = PolicyName.DOCTOR)]
 [Route("/v1/bcs/qualifications")]
 public class QualificationsController : BaseController
 {

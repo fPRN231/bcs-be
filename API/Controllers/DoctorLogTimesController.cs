@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace API.Controllers;
 
-[Authorize(Policy = PolicyName.DOCTOR)]
+[Authorize(Roles = PolicyName.DOCTOR)]
 [Route("/v1/bcs/doctor-logtimes")]
 public class DoctorLogTimesController : BaseController
 {
@@ -49,9 +49,21 @@ public class DoctorLogTimesController : BaseController
     [HttpPost]
     public async Task<IActionResult> CreateDoctorLogTime([FromBody] CreateDoctorLogTimeRequest req)
     {
+        if (req.StartTime >= req.EndTime)
+            throw new BadRequestException("Start time < End time wtf??");
+
+        var checkTime = await _doctorLogTimeRepository.FirstOrDefaultAsync(
+            dlt => dlt.DoctorId.Equals(CurrentUserID) && dlt.DayOfWeek == req.DayOfWeek &&
+                (dlt.StartTime <= req.StartTime && dlt.EndTime >= req.EndTime) ||
+                (dlt.StartTime > req.StartTime && dlt.StartTime < req.EndTime) ||
+                (dlt.EndTime > req.StartTime && dlt.EndTime < req.EndTime) ||
+                (dlt.StartTime > req.StartTime && dlt.EndTime < req.EndTime)
+            );
+        if (checkTime != null)
+            throw new BadRequestException("Invalid log time");
+
         DoctorLogTime entity = Mapper.Map(req, new DoctorLogTime());
         entity.DoctorId = CurrentUserID;
-        entity.Doctor = await _userRepository.FirstOrDefaultAsync(x => x.Id.Equals(entity.DoctorId));
         entity.CreatedAt = DateTime.Now;
         await _doctorLogTimeRepository.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);

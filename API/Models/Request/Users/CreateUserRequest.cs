@@ -25,7 +25,7 @@ namespace API.Models.Request.Users
         [Required]
         public string Password { get; set; }
 
-        [Required]
+        [Required, Range((int) Role.Admin, (int) Role.Staff)]
         public virtual Role Role { get; set; }
     }
 }
