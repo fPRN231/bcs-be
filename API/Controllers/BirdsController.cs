@@ -37,8 +37,8 @@ public class BirdsController : BaseController
     public async Task<IActionResult> CreateBird([FromBody] CreateBirdRequest req)
     {
         Bird entity = Mapper.Map(req, new Bird());
-        entity.UserId = CurrentUserID;
         entity.User = await _userRepostory.FirstOrDefaultAsync(x => x.Id.Equals(entity.UserId));
+        entity.CreatedAt = DateTime.Now;
         await _birdRepostory.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);
     }
@@ -48,6 +48,7 @@ public class BirdsController : BaseController
     {
         var target = await _birdRepostory.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
         Bird entity = Mapper.Map(req, target);
+        entity.ModifiedAt = DateTime.Now;
         await _birdRepostory.UpdateAsync(entity);
         return StatusCode(StatusCodes.Status204NoContent);
     }
@@ -56,6 +57,7 @@ public class BirdsController : BaseController
     public async Task<IActionResult> DeleteBird(Guid id)
     {
         var target = await _birdRepostory.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
+        //Soft Delete?
         await _birdRepostory.DeleteAsync(target);
         return StatusCode(StatusCodes.Status204NoContent);
     }

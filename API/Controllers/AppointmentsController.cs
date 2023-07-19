@@ -45,7 +45,7 @@ public class AppointmentsController : BaseController
         return StatusCode(StatusCodes.Status201Created);
     }
 
-    [HttpPost("booking/select-time-services")]
+    [HttpPatch("booking/select-time-services")]
     public async Task<IActionResult> SelectAppointmentTimeAndServices(Guid Id, [FromBody] SelectAppointmentTimeAndServices req)
     {
         var target = await _appointmentRepostory.FoundOrThrow(c => c.Id.Equals(Id), new NotFoundException());
@@ -54,12 +54,13 @@ public class AppointmentsController : BaseController
         return StatusCode(StatusCodes.Status204NoContent);
     }
 
-    [HttpPost("booking/complete-form")]
+    [HttpPatch("booking/complete-form")]
     public async Task<IActionResult> CompleteAppointmentForm(Guid Id, [FromBody] CompleteAppointmentForm req)
     {
         var target = await _appointmentRepostory.FoundOrThrow(c => c.Id.Equals(Id), new NotFoundException());
         Appointment entity = Mapper.Map(req, target);
         entity.AppointmentStatus = AppointmentStatus.Pending;
+        entity.CreatedAt = DateTime.Now;
         await _appointmentRepostory.UpdateAsync(entity);
         return StatusCode(StatusCodes.Status204NoContent);
     }
@@ -69,6 +70,7 @@ public class AppointmentsController : BaseController
     {
         Appointment entity = Mapper.Map(req, new Appointment());
         entity.AppointmentStatus = AppointmentStatus.Pending;
+        entity.CreatedAt = DateTime.Now;
         await _appointmentRepostory.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);
     }
@@ -78,6 +80,7 @@ public class AppointmentsController : BaseController
     {
         var target = await _appointmentRepostory.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
         Appointment entity = Mapper.Map(req, target);
+        entity.ModifiedAt = DateTime.Now;
         await _appointmentRepostory.UpdateAsync(entity);
         return StatusCode(StatusCodes.Status204NoContent);
     }
@@ -86,12 +89,13 @@ public class AppointmentsController : BaseController
     public async Task<IActionResult> DeleteAppointment(Guid id)
     {
         var target = await _appointmentRepostory.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
+        //Add soft delete?
         await _appointmentRepostory.DeleteAsync(target);
         return StatusCode(StatusCodes.Status204NoContent);
     }
 
     [HttpPatch("{id}/confirmed")]
-    public async Task<IActionResult> ConfirmAppointment (Guid id)
+    public async Task<IActionResult> ConfirmAppointment(Guid id)
     {
         var target = await _appointmentRepostory.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
         target.AppointmentStatus = AppointmentStatus.Confirmed;

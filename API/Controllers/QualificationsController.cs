@@ -1,4 +1,5 @@
 ﻿using API.Models.Request.Qualifications;
+using Domain.Constants;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[Authorize]
+[Authorize(Policy = PolicyName.DOCTOR)]
 [Route("/v1/bcs/qualifications")]
 public class QualificationsController : BaseController
 {
@@ -33,6 +34,7 @@ public class QualificationsController : BaseController
         Qualification entity = Mapper.Map(req, new Qualification());
         entity.DoctorId = CurrentUserID;
         entity.User = await _userRepository.FirstOrDefaultAsync(x => x.Id.Equals(entity.DoctorId));
+        entity.CreatedAt = DateTime.Now;
         await _qualificationRepository.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);
     }
@@ -42,6 +44,7 @@ public class QualificationsController : BaseController
     {
         var target = await _qualificationRepository.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
         Qualification entity = Mapper.Map(req, target);
+        entity.ModifiedAt = DateTime.Now;
         await _qualificationRepository.UpdateAsync(entity);
         return StatusCode(StatusCodes.Status204NoContent);
     }
@@ -50,6 +53,7 @@ public class QualificationsController : BaseController
     public async Task<IActionResult> DeleteQualification(Guid id)
     {
         var target = await _qualificationRepository.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
+        //Soft Delete
         await _qualificationRepository.DeleteAsync(target);
         return StatusCode(StatusCodes.Status204NoContent);
     }

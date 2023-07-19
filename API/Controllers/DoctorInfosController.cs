@@ -1,4 +1,5 @@
 ﻿using API.Models.Request.DoctorInfos;
+using Domain.Constants;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[Authorize]
+[Authorize(Policy = PolicyName.DOCTOR)]
 [Route("/v1/bcs/doctorInfos")]
 public class DoctorInfosController : BaseController
 {
@@ -27,12 +28,13 @@ public class DoctorInfosController : BaseController
         return Ok(target);
     }
 
-    [HttpPost]
+    [HttpPost("{id}")]
     public async Task<IActionResult> CreateDoctorInfo([FromBody] CreateDoctorInfoRequest req)
     {
         DoctorInfo entity = Mapper.Map(req, new DoctorInfo());
         entity.DoctorId = CurrentUserID;
         entity.Doctor = await _userRepository.FirstOrDefaultAsync(x => x.Id.Equals(entity.DoctorId));
+        entity.CreatedAt = DateTime.Now;
         await _doctorInfoRepository.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);
     }
@@ -42,6 +44,7 @@ public class DoctorInfosController : BaseController
     {
         var target = await _doctorInfoRepository.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
         DoctorInfo entity = Mapper.Map(req, target);
+        entity.ModifiedAt = DateTime.Now;
         await _doctorInfoRepository.UpdateAsync(entity);
         return StatusCode(StatusCodes.Status204NoContent);
     }
@@ -50,6 +53,7 @@ public class DoctorInfosController : BaseController
     public async Task<IActionResult> DeleteDoctorInfo(Guid id)
     {
         var target = await _doctorInfoRepository.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
+        //Soft Delete
         await _doctorInfoRepository.DeleteAsync(target);
         return StatusCode(StatusCodes.Status204NoContent);
     }

@@ -35,6 +35,7 @@ public class ServicesController : BaseController
     public async Task<IActionResult> CreateService([FromBody] CreateServiceRequest req)
     {
         Service entity = Mapper.Map(req, new Service());
+        entity.CreatedAt = DateTime.Now;
         await _serviceRepostory.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);
     }
@@ -44,6 +45,7 @@ public class ServicesController : BaseController
     {
         var target = await _serviceRepostory.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
         Service entity = Mapper.Map(req, target);
+        entity.ModifiedAt = DateTime.Now;
         await _serviceRepostory.UpdateAsync(entity);
         return StatusCode(StatusCodes.Status204NoContent);
     }
@@ -52,6 +54,7 @@ public class ServicesController : BaseController
     public async Task<IActionResult> DeleteService(Guid id)
     {
         var target = await _serviceRepostory.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
+        //Soft Delete
         await _serviceRepostory.DeleteAsync(target);
         return StatusCode(StatusCodes.Status204NoContent);
     }

@@ -40,6 +40,7 @@ public class UsersController : BaseController
     public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest req)
     {
         User entity = Mapper.Map(req, new User());
+        entity.CreatedAt = DateTime.Now;
         await _userRepostory.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);
     }
@@ -49,6 +50,7 @@ public class UsersController : BaseController
     {
         var target = await _userRepostory.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
         User entity = Mapper.Map(req, target);
+        entity.ModifiedAt = DateTime.Now;
         await _userRepostory.UpdateAsync(entity);
         return StatusCode(StatusCodes.Status204NoContent);
     }
@@ -57,6 +59,7 @@ public class UsersController : BaseController
     public async Task<IActionResult> DeleteUser(Guid id)
     {
         var target = await _userRepostory.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
+        //Soft Delete
         await _userRepostory.DeleteAsync(target);
         return StatusCode(StatusCodes.Status204NoContent);
     }

@@ -39,6 +39,7 @@ public class MedicalHistoriesController : BaseController
         MedicalHistory entity = Mapper.Map(req, new MedicalHistory());
         entity.BirdId = birdId;
         entity.Bird = await _birdRepository.FirstOrDefaultAsync(x => x.Id.Equals(birdId));
+        entity.CreatedAt = DateTime.Now;
         await _medicalHistoryRepository.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);
     }
@@ -48,6 +49,7 @@ public class MedicalHistoriesController : BaseController
     {
         var target = await _medicalHistoryRepository.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
         MedicalHistory entity = Mapper.Map(req, target);
+        entity.ModifiedAt = DateTime.Now;
         await _medicalHistoryRepository.UpdateAsync(entity);
         return StatusCode(StatusCodes.Status204NoContent);
     }
@@ -56,6 +58,7 @@ public class MedicalHistoriesController : BaseController
     public async Task<IActionResult> DeleteMedicalHistory(Guid id)
     {
         var target = await _medicalHistoryRepository.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
+        //Soft Delete
         await _medicalHistoryRepository.DeleteAsync(target);
         return StatusCode(StatusCodes.Status204NoContent);
     }

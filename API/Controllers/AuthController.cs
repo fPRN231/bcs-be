@@ -66,6 +66,7 @@ public class AuthController : BaseController
         var passwordHasher = new PasswordHasher<User>();
         var user = Mapper.Map(registerRequest, new User());
         user.Password = passwordHasher.HashPassword(user, user.Password);
+        user.CreatedAt = DateTime.Now;
         await _usrRepo.CreateAsync(user);
         var response = Mapper.Map(user, new RegisterResponse());
         return Ok(response);

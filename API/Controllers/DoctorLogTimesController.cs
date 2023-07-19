@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace API.Controllers;
 
-[Authorize]
+[Authorize(Policy = PolicyName.DOCTOR)]
 [Route("/v1/bcs/doctor-logtimes")]
 public class DoctorLogTimesController : BaseController
 {
@@ -52,6 +52,7 @@ public class DoctorLogTimesController : BaseController
         DoctorLogTime entity = Mapper.Map(req, new DoctorLogTime());
         entity.DoctorId = CurrentUserID;
         entity.Doctor = await _userRepository.FirstOrDefaultAsync(x => x.Id.Equals(entity.DoctorId));
+        entity.CreatedAt = DateTime.Now;
         await _doctorLogTimeRepository.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);
     }
@@ -61,6 +62,7 @@ public class DoctorLogTimesController : BaseController
     {
         var target = await _doctorLogTimeRepository.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
         DoctorLogTime entity = Mapper.Map(req, target);
+        entity.ModifiedAt = DateTime.Now;
         await _doctorLogTimeRepository.UpdateAsync(entity);
         return StatusCode(StatusCodes.Status204NoContent);
     }
@@ -69,6 +71,7 @@ public class DoctorLogTimesController : BaseController
     public async Task<IActionResult> DeleteDoctorInfo(Guid id)
     {
         var target = await _doctorLogTimeRepository.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
+        //Soft Delete?
         await _doctorLogTimeRepository.DeleteAsync(target);
         return StatusCode(StatusCodes.Status204NoContent);
     }
