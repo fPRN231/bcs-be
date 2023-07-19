@@ -85,7 +85,6 @@ public class AppointmentsController : BaseController
     {
         var target = await _appointmentRepostory.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
         Appointment entity = Mapper.Map(req, target);
-        entity.ModifiedAt = DateTime.Now;
         await _appointmentRepostory.UpdateAsync(entity);
         return StatusCode(StatusCodes.Status204NoContent);
     }

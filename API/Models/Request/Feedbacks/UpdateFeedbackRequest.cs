@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.Models.Request.Feedbacks
 {
-    public class UpdateFeedbackRequest : IMapTo<Bird>
+    public class UpdateFeedbackRequest : IMapTo<Feedback>
     {
         public int DoctorRating { get; set; }
 

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[Authorize(Roles = PolicyName.DOCTOR)]
+[Authorize]
 [Route("/v1/bcs/doctorInfos")]
 public class DoctorInfosController : BaseController
 {
@@ -28,27 +28,27 @@ public class DoctorInfosController : BaseController
         return Ok(target);
     }
 
-    [HttpPost("{id}")]
+    [Authorize(Roles = PolicyName.DOCTOR)]
+    [HttpPost]
     public async Task<IActionResult> CreateDoctorInfo([FromBody] CreateDoctorInfoRequest req)
     {
         DoctorInfo entity = Mapper.Map(req, new DoctorInfo());
         entity.DoctorId = CurrentUserID;
-        entity.Doctor = await _userRepository.FirstOrDefaultAsync(x => x.Id.Equals(entity.DoctorId));
-        entity.CreatedAt = DateTime.Now;
         await _doctorInfoRepository.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);
     }
 
+    [Authorize(Roles = PolicyName.DOCTOR)]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateDoctorInfo(Guid id, [FromBody] UpdateDoctorInfoRequest req)
     {
         var target = await _doctorInfoRepository.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
         DoctorInfo entity = Mapper.Map(req, target);
-        entity.ModifiedAt = DateTime.Now;
         await _doctorInfoRepository.UpdateAsync(entity);
         return StatusCode(StatusCodes.Status204NoContent);
     }
 
+    [Authorize(Roles = PolicyName.DOCTOR)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteDoctorInfo(Guid id)
     {

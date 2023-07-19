@@ -11,17 +11,15 @@ using System.Linq;
 
 namespace API.Controllers;
 
-[Authorize(Roles = PolicyName.DOCTOR)]
+[Authorize]
 [Route("/v1/bcs/doctor-logtimes")]
 public class DoctorLogTimesController : BaseController
 {
     private readonly IRepositoryBase<DoctorLogTime> _doctorLogTimeRepository;
-    private readonly IRepositoryBase<User> _userRepository;
 
-    public DoctorLogTimesController(IRepositoryBase<DoctorLogTime> doctorLogTimeRepository, IRepositoryBase<User> userRepository)
+    public DoctorLogTimesController(IRepositoryBase<DoctorLogTime> doctorLogTimeRepository)
     {
         _doctorLogTimeRepository = doctorLogTimeRepository;
-        _userRepository = userRepository;
     }
 
     [HttpGet]
@@ -37,7 +35,7 @@ public class DoctorLogTimesController : BaseController
         return Ok(target);
     }
 
-    [HttpGet("{doctorId}")]
+    [HttpGet("doctor/{doctorId}")]
     public async Task<IActionResult> GetAvailableLogTimes(Guid doctorId)
     {
         IOrderedEnumerable<DoctorLogTime> availableLogTimes;
@@ -46,6 +44,7 @@ public class DoctorLogTimesController : BaseController
         return Ok(availableLogTimes);
     }
 
+    [Authorize(Roles = PolicyName.DOCTOR)]
     [HttpPost]
     public async Task<IActionResult> CreateDoctorLogTime([FromBody] CreateDoctorLogTimeRequest req)
     {
@@ -64,21 +63,21 @@ public class DoctorLogTimesController : BaseController
 
         DoctorLogTime entity = Mapper.Map(req, new DoctorLogTime());
         entity.DoctorId = CurrentUserID;
-        entity.CreatedAt = DateTime.Now;
         await _doctorLogTimeRepository.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);
     }
 
+    [Authorize(Roles = PolicyName.DOCTOR)]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateDoctorLogTime(Guid id, [FromBody] UpdateDoctorLogTimeRequest req)
     {
         var target = await _doctorLogTimeRepository.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
         DoctorLogTime entity = Mapper.Map(req, target);
-        entity.ModifiedAt = DateTime.Now;
         await _doctorLogTimeRepository.UpdateAsync(entity);
         return StatusCode(StatusCodes.Status204NoContent);
     }
 
+    [Authorize(Roles = PolicyName.DOCTOR)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteDoctorInfo(Guid id)
     {

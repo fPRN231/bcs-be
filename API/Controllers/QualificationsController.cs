@@ -20,7 +20,11 @@ public class QualificationsController : BaseController
         _qualificationRepository = qualificationRepository;
         _userRepository = userRepository;
     }
-
+    [HttpGet]
+    public async Task<IActionResult> GetQualifications()
+    {
+        return Ok(await _qualificationRepository.ToListAsync());
+    }
 
     [HttpGet("{doctorId}")]
     public async Task<IActionResult> GetQualifications(Guid doctorId)
@@ -33,8 +37,6 @@ public class QualificationsController : BaseController
     {
         Qualification entity = Mapper.Map(req, new Qualification());
         entity.DoctorId = CurrentUserID;
-        entity.User = await _userRepository.FirstOrDefaultAsync(x => x.Id.Equals(entity.DoctorId));
-        entity.CreatedAt = DateTime.Now;
         await _qualificationRepository.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);
     }
@@ -44,7 +46,6 @@ public class QualificationsController : BaseController
     {
         var target = await _qualificationRepository.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
         Qualification entity = Mapper.Map(req, target);
-        entity.ModifiedAt = DateTime.Now;
         await _qualificationRepository.UpdateAsync(entity);
         return StatusCode(StatusCodes.Status204NoContent);
     }

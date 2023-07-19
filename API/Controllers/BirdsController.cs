@@ -12,12 +12,10 @@ namespace API.Controllers;
 public class BirdsController : BaseController
 {
     private readonly IRepositoryBase<Bird> _birdRepostory;
-    private readonly IRepositoryBase<User> _userRepostory;
 
-    public BirdsController(IRepositoryBase<Bird> birdRepostory, IRepositoryBase<User> userRepostory)
+    public BirdsController(IRepositoryBase<Bird> birdRepostory)
     {
         _birdRepostory = birdRepostory;
-        _userRepostory = userRepostory;
     }
 
     [HttpGet]
@@ -38,7 +36,6 @@ public class BirdsController : BaseController
     {
         Bird entity = Mapper.Map(req, new Bird());
         entity.UserId = CurrentUserID;
-        entity.CreatedAt = DateTime.Now;
         await _birdRepostory.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);
     }
@@ -48,7 +45,6 @@ public class BirdsController : BaseController
     {
         var target = await _birdRepostory.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
         Bird entity = Mapper.Map(req, target);
-        entity.ModifiedAt = DateTime.Now;
         await _birdRepostory.UpdateAsync(entity);
         return StatusCode(StatusCodes.Status204NoContent);
     }

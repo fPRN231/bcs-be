@@ -23,9 +23,10 @@ public class FeedbacksController : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetFeedbackOfAppointment(Guid appointmentId)
+    public async Task<IActionResult> GetFeedbacksOfAppointment(Guid appointmentId)
     {
-        return Ok(await _feedbackRepository.WhereAsync(x => x.AppointmentId.Equals(appointmentId)));
+        var target = await _feedbackRepository.WhereAsync(x => x.AppointmentId.Equals(appointmentId));
+        return Ok(target);
     }
 
     [HttpGet("{id}")]
@@ -36,14 +37,11 @@ public class FeedbacksController : BaseController
     }
 
     [HttpPost("{id}")]
-    public async Task<IActionResult> CreateFeedback(Guid appointmentId, [FromBody] CreateFeedbackRequest req)
+    public async Task<IActionResult> CreateFeedback(Guid id, [FromBody] CreateFeedbackRequest req)
     {
         Feedback entity = Mapper.Map(req, new Feedback());
-        entity.AppointmentId = appointmentId;
+        entity.AppointmentId = id;
         entity.UserId = CurrentUserID;
-        entity.Appointment = await _appointmentsRepository.FirstOrDefaultAsync(x => x.Id.Equals(entity.AppointmentId));
-        entity.User = await _userRepository.FirstOrDefaultAsync(x => x.Id.Equals(entity.UserId));
-        entity.CreatedAt = DateTime.Now;
         await _feedbackRepository.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);
     }
@@ -53,7 +51,6 @@ public class FeedbacksController : BaseController
     {
         var target = await _feedbackRepository.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
         Feedback entity = Mapper.Map(req, target);
-        entity.ModifiedAt = DateTime.Now;
         await _feedbackRepository.UpdateAsync(entity);
         return StatusCode(StatusCodes.Status204NoContent);
     }

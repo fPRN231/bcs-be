@@ -13,11 +13,9 @@ namespace API.Controllers;
 public class MedicalHistoriesController : BaseController
 {
     private readonly IRepositoryBase<MedicalHistory> _medicalHistoryRepository;
-    private readonly IRepositoryBase<Bird> _birdRepository;
-    public MedicalHistoriesController(IRepositoryBase<MedicalHistory> medicalHistoryRepository, IRepositoryBase<Bird> birdRepository)
+    public MedicalHistoriesController(IRepositoryBase<MedicalHistory> medicalHistoryRepository)
     {
         _medicalHistoryRepository = medicalHistoryRepository;
-        _birdRepository = birdRepository;
     }
 
     [HttpGet]
@@ -45,8 +43,6 @@ public class MedicalHistoriesController : BaseController
     {
         MedicalHistory entity = Mapper.Map(req, new MedicalHistory());
         entity.BirdId = birdId;
-        entity.Bird = await _birdRepository.FirstOrDefaultAsync(x => x.Id.Equals(birdId));
-        entity.CreatedAt = DateTime.Now;
         await _medicalHistoryRepository.CreateAsync(entity);
         return StatusCode(StatusCodes.Status201Created);
     }
@@ -56,7 +52,6 @@ public class MedicalHistoriesController : BaseController
     {
         var target = await _medicalHistoryRepository.FoundOrThrow(c => c.Id.Equals(id), new NotFoundException());
         MedicalHistory entity = Mapper.Map(req, target);
-        entity.ModifiedAt = DateTime.Now;
         await _medicalHistoryRepository.UpdateAsync(entity);
         return StatusCode(StatusCodes.Status204NoContent);
     }

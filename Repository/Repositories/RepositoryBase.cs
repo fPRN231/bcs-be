@@ -19,12 +19,17 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : BaseEntity
     public async Task CreateAsync(T entity)
     {
         await dbSet.AddAsync(entity);
+        entity.CreatedAt = DateTime.Now;
         await _context.SaveChangesAsync();
     }
 
     public async Task CreateAsync(IEnumerable<T> entities)
     {
         await _context.AddRangeAsync(entities);
+        foreach (var  entity in entities)
+        {
+            entity.CreatedAt = DateTime.Now;
+        }
         await _context.SaveChangesAsync();
     }
 
@@ -91,6 +96,7 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : BaseEntity
     public async Task UpdateAsync(T updated)
     {
         _context.Attach(updated).State = EntityState.Modified;
+        updated.ModifiedAt = DateTime.UtcNow;
         await _context.SaveChangesAsync();
     }
 
