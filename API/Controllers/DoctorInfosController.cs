@@ -21,6 +21,13 @@ public class DoctorInfosController : BaseController
         _userRepository = userRepository;
     }
 
+    [HttpGet]
+    public async Task <IActionResult> GetDoctorInfos()
+    {
+        var target = await _doctorInfoRepository.ToListAsync();
+        return Ok(target);
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetDoctorInfo(Guid id)
     {
