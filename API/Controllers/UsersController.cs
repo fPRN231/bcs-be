@@ -3,6 +3,7 @@ using Domain.Constants;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -36,6 +37,7 @@ public class UsersController : BaseController
         return Ok(target);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest req)
     {
@@ -44,6 +46,7 @@ public class UsersController : BaseController
         return StatusCode(StatusCodes.Status201Created);
     }
 
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UpdateUserRequest req)
     {
@@ -53,6 +56,7 @@ public class UsersController : BaseController
         return StatusCode(StatusCodes.Status204NoContent);
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(Guid id)
     {

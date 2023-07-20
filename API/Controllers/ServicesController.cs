@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[Authorize]
 [Route("/v1/bcs/services")]
 public class ServicesController : BaseController
 {
@@ -31,6 +30,7 @@ public class ServicesController : BaseController
         return Ok(target);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateService([FromBody] CreateServiceRequest req)
     {
@@ -39,6 +39,7 @@ public class ServicesController : BaseController
         return StatusCode(StatusCodes.Status201Created);
     }
 
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateService(Guid id, [FromBody] UpdateServiceRequest req)
     {
@@ -48,6 +49,7 @@ public class ServicesController : BaseController
         return StatusCode(StatusCodes.Status204NoContent);
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteService(Guid id)
     {

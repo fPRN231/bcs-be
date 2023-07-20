@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[Authorize]
 [Route("/v1/bcs/feedbacks")]
 public class FeedbacksController : BaseController
 {
@@ -36,6 +35,7 @@ public class FeedbacksController : BaseController
         return Ok(target);
     }
 
+    [Authorize]
     [HttpPost("{id}")]
     public async Task<IActionResult> CreateFeedback(Guid id, [FromBody] CreateFeedbackRequest req)
     {
@@ -46,6 +46,7 @@ public class FeedbacksController : BaseController
         return StatusCode(StatusCodes.Status201Created);
     }
 
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateFeedback(Guid id, [FromBody] UpdateFeedbackRequest req)
     {
@@ -55,6 +56,7 @@ public class FeedbacksController : BaseController
         return StatusCode(StatusCodes.Status204NoContent);
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteFeedback(Guid id)
     {
