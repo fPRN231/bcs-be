@@ -35,7 +35,7 @@ public class AppointmentsController : BaseController
     [HttpGet("{id}")]
     public async Task<IActionResult> GetAppointment(Guid id)
     {
-        var target = await _appointmentRepostory.FirstOrDefaultAsync(x => x.Id.Equals(id));
+        var target = await _appointmentRepostory.FirstOrDefaultAsync(x => x.Id.Equals(id), "Services");
         return Ok(target);
     }
 
