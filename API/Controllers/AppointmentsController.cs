@@ -76,14 +76,12 @@ public class AppointmentsController : BaseController
             throw new BadRequestException("Unavailable");
         }
 
-        ICollection<Service>? services = null;
         if (req.ServicesList.Count > 0)
         {
-            services ??= new List<Service>();
             foreach (var serviceId in req.ServicesList)
             {
                 var service = await _serviceRepository.FirstOrDefaultAsync(s => s.Id.Equals(serviceId));
-                services.Add(service);
+                entity.Services.Add(service);
             }
         }
         else
@@ -91,7 +89,6 @@ public class AppointmentsController : BaseController
             throw new BadRequestException("Must select at least 1 service!");
         }
 
-        entity.Services = services;
         entity.StartDateTime = CreateDayOfWeek(doctorLogTime.DayOfWeek, (int)doctorLogTime.StartTime % 23);
         entity.EndDateTime = CreateDayOfWeek(doctorLogTime.DayOfWeek, (int)doctorLogTime.EndTime % 23);
         entity.AppointmentStatus = AppointmentStatus.Pending;
