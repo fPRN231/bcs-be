@@ -29,6 +29,5 @@ public partial class Appointment : BaseEntity
 
     public virtual AppointmentStatus AppointmentStatus { get; set; }
 
-    [JsonIgnore]
     public virtual ICollection<Service> Services { get; set; }
 }

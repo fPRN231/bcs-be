@@ -15,6 +15,6 @@ namespace API.Models.Request.Appointments
         [Required]
         public Guid DoctorLogTimeId { get; set; }
 
-        public virtual ICollection<Service> Services { get; set; }
+        public virtual ICollection<Guid> ServicesList { get; set; }
     }
 }

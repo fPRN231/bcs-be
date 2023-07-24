@@ -16,12 +16,14 @@ public class AppointmentsController : BaseController
     private readonly IRepositoryBase<Appointment> _appointmentRepostory;
     private readonly IRepositoryBase<User> _userRepository;
     private readonly IRepositoryBase<DoctorLogTime> _doctorLogTimeRepository;
+    private readonly IRepositoryBase<Service> _serviceRepository;
 
-    public AppointmentsController(IRepositoryBase<Appointment> appointmentRepostory, IRepositoryBase<User> userRepository, IRepositoryBase<DoctorLogTime> doctorLogTimeRepository)
+    public AppointmentsController(IRepositoryBase<Appointment> appointmentRepostory, IRepositoryBase<User> userRepository, IRepositoryBase<DoctorLogTime> doctorLogTimeRepository, IRepositoryBase<Service> serviceRepository)
     {
         _appointmentRepostory = appointmentRepostory;
         _userRepository = userRepository;
         _doctorLogTimeRepository = doctorLogTimeRepository;
+        _serviceRepository = serviceRepository;
     }
 
     [HttpGet]
@@ -73,6 +75,23 @@ public class AppointmentsController : BaseController
         {
             throw new BadRequestException("Unavailable");
         }
+
+        ICollection<Service>? services = null;
+        if (req.ServicesList.Count > 0)
+        {
+            services ??= new List<Service>();
+            foreach (var serviceId in req.ServicesList)
+            {
+                var service = await _serviceRepository.FirstOrDefaultAsync(s => s.Id.Equals(serviceId));
+                services.Add(service);
+            }
+        }
+        else
+        {
+            throw new BadRequestException("Must select at least 1 service!");
+        }
+
+        entity.Services = services;
         entity.StartDateTime = CreateDayOfWeek(doctorLogTime.DayOfWeek, (int)doctorLogTime.StartTime % 23);
         entity.EndDateTime = CreateDayOfWeek(doctorLogTime.DayOfWeek, (int)doctorLogTime.EndTime % 23);
         entity.AppointmentStatus = AppointmentStatus.Pending;
