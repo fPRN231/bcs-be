@@ -70,7 +70,10 @@ public class AppointmentsController : BaseController
     public async Task<IActionResult> CreateAppointment([FromBody] CreateAppointmentRequest req)
     {
         Appointment entity = Mapper.Map(req, new Appointment());
-        var doctorLogTime = await _doctorLogTimeRepository.FoundOrThrow(c => c.Id.Equals(req.DoctorLogTimeId), new NotFoundException());
+        var doctorLogTime = await _doctorLogTimeRepository.FoundOrThrow(
+            c => c.Id.Equals(req.DoctorLogTimeId), 
+            new NotFoundException()
+            );
         if (!doctorLogTime.IsAvailable)
         {
             throw new BadRequestException("Unavailable");
@@ -80,7 +83,10 @@ public class AppointmentsController : BaseController
         {
             foreach (var serviceId in req.ServicesList)
             {
-                var service = await _serviceRepository.FirstOrDefaultAsync(s => s.Id.Equals(serviceId));
+                var service = await _serviceRepository.FoundOrThrow(
+                    s => s.Id.Equals(serviceId),
+                    new BadRequestException("Invalid service")
+                    );
                 entity.Services.Add(service);
             }
         }
@@ -93,6 +99,9 @@ public class AppointmentsController : BaseController
         entity.EndDateTime = CreateDayOfWeek(doctorLogTime.DayOfWeek, (int)doctorLogTime.EndTime % 23);
         entity.AppointmentStatus = AppointmentStatus.Pending;
         await _appointmentRepostory.CreateAsync(entity);
+
+        doctorLogTime.IsAvailable = false;
+        await _doctorLogTimeRepository.UpdateAsync(doctorLogTime);
         return StatusCode(StatusCodes.Status201Created);
     }
 
